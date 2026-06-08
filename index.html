@@ -186,7 +186,7 @@ html,body{
         <div class="sc"><div class="l">รายรับเดือนนี้</div><div class="v v-inc" id="s-inc">—</div><div class="s" id="s-jobs"></div></div>
         <div class="sc"><div class="l">รายจ่ายเดือนนี้</div><div class="v v-exp" id="s-exp">—</div></div>
         <div class="sc"><div class="l">กำไรเบื้องต้น</div><div class="v v-inc" id="s-profit">—</div></div>
-        <div class="sc"><div class="l">ค้างรับ</div><div class="v v-amb" id="s-credit">—</div></div>
+        <div class="sc" onclick="nav('credit');setBnav('credit')" style="cursor:pointer"><div class="l">ค้างรับ 👆</div><div class="v v-amb" id="s-credit">—</div><div class="s" style="color:var(--amber)">กดเพื่อดูรายการ</div></div>
       </div>
       <div class="btn2">
         <button class="abtn abtn-inc" onclick="nav('inc')">➕ บันทึกรายรับ</button>
@@ -278,6 +278,7 @@ html,body{
 
     <!-- CREDIT -->
     <div id="page-credit" class="page">
+      <button onclick="nav('home');setBnav('home')" style="display:flex;align-items:center;gap:8px;background:none;border:none;font-size:22px;color:var(--text2);font-family:var(--font);cursor:pointer;padding:0;margin-bottom:14px">← กลับหน้าหลัก</button>
       <div class="sec-lbl" style="margin-top:0">กดปุ่ม "รับแล้ว" เมื่อลูกค้าชำระเงิน</div>
       <div id="credit-list"><div class="spinner"></div></div>
     </div>
