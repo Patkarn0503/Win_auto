@@ -420,13 +420,13 @@ function loadHome(){
   gasGet('getRecentRows',{n:8}).then(function(res){
     var wrap=document.getElementById('recent-list');
     if(!res.ok||!res.rows.length){ wrap.innerHTML='<p style="color:var(--text3);text-align:center;padding:20px">ยังไม่มีรายการ</p>'; return; }
-    wrap.innerHTML=res.rows.map(function(r){
+    window._recentRows = res.rows.slice(0,8);
+    wrap.innerHTML=window._recentRows.map(function(r,idx){
       var isInc=r.type==='income';
-      return '<div class="txn"><div><div class="tn">'+(r.desc||r.customer||'')+'</div>'+
-        '<div class="tm">'+(r.date||'')+(r.bill?' · บิล '+r.bill:'')+'</div></div>'+
-        '<div><div class="ta '+(isInc?'inc':'exp')+'">'+(isInc?'+':'-')+fmt(isInc?r.total:r.amount)+'</div>'+
-        '<div>'+payBadge(isInc?r.payType:r.payMethod)+'</div></div></div>';
+      var label=isInc?(r.desc+(r.customer?' · '+r.customer:'')):(r.desc);
+      return '<div class="txn" data-ridx="'+idx+'">'+'<div><div class="tn">'+label+'</div>'+'<div class="tm">'+(r.date||'')+(r.bill?' · บิล '+r.bill:'')+'</div></div>'+'<div><div class="ta '+(isInc?'inc':'exp')+'">'+(isInc?'+':'-')+fmt(isInc?r.total:r.amount)+'</div>'+'<div>'+payBadge(isInc?r.payType:r.payMethod)+'</div></div></div>';
     }).join('');
+    wrap.onclick=function(e){ var el=e.target; while(el&&!el.dataset.ridx&&el!==wrap){el=el.parentElement;} if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);} };
   }).catch(function(){});
 
   gasGet('getCreditList').then(renderCredit).catch(function(){});
@@ -689,15 +689,13 @@ function renderListRows(){
   var wrap=document.getElementById('list-wrap');
   var page=listFiltered.slice(0,listOffset+listLimit);
   if(!page.length){ wrap.innerHTML='<p style="color:var(--text3);text-align:center;padding:20px">ไม่พบรายการ</p>'; document.getElementById('list-loadmore').style.display='none'; return; }
-  wrap.innerHTML=page.map(function(r){
+  window._pageRows = page;
+  wrap.innerHTML=page.map(function(r,idx){
     var isInc=r.type==='income';
     var label=isInc?(r.desc+(r.customer?' · '+r.customer:'')):(r.desc);
-    return '<div class="txn" onclick='showDetail('+JSON.stringify(r).replace(/'/g,"\'")+')'>' +
-      '<div><div class="tn">'+label+'</div>'+
-      '<div class="tm">'+(r.date||'')+(isInc&&r.bill?' · บิล '+r.bill:'')+(isInc?'':' · '+(r.category||''))+'</div></div>'+
-      '<div><div class="ta '+(isInc?'inc':'exp')+'">'+(isInc?'+':'-')+fmt(isInc?r.total:r.amount)+'</div>'+
-      '<div>'+(isInc?payBadge(r.payType):'<span class="badge b-spare">'+(r.category||'')+'</span>')+'</div></div></div>';
+    return '<div class="txn" data-idx="'+idx+'">'+'<div><div class="tn">'+label+'</div>'+'<div class="tm">'+(r.date||'')+(isInc&&r.bill?' · บิล '+r.bill:'')+(isInc?'':' · '+(r.category||''))+'</div></div>'+'<div><div class="ta '+(isInc?'inc':'exp')+'">'+(isInc?'+':'-')+fmt(isInc?r.total:r.amount)+'</div>'+'<div>'+(isInc?payBadge(r.payType):'<span class="badge b-spare">'+(r.category||'')+'</span>')+'</div></div></div>';
   }).join('');
+  wrap.onclick=function(e){ var el=e.target; while(el&&el.dataset&&el.dataset.idx===undefined&&el!==wrap){el=el.parentElement;} if(el&&el.dataset&&el.dataset.idx!==undefined){showDetail(window._pageRows[parseInt(el.dataset.idx)]);} };
   document.getElementById('list-loadmore').style.display = listFiltered.length > listOffset+listLimit ? 'block' : 'none';
 }
 
