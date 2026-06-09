@@ -286,26 +286,54 @@ html,body{
     <!-- REPORT -->
     <div id="page-report" class="page">
       <div class="rpt-tabs">
-        <button class="rt on" onclick="setRTab(this,'monthly')">รายเดือน</button>
-        <button class="rt" onclick="setRTab(this,'yearly')">รายปี</button>
+        <button class="rt on" id="rt-monthly" onclick="setRTab('monthly')">รายเดือน</button>
+        <button class="rt" id="rt-yearly" onclick="setRTab('yearly')">รายปี</button>
+        <button class="rt" id="rt-range" onclick="setRTab('range')">ช่วงวันที่</button>
       </div>
+
+      <!-- รายเดือน -->
       <div id="rpt-monthly">
         <div class="mnav">
           <div class="mn-btn" onclick="prevMon()">&#8249;</div>
           <div class="mn-lbl" id="rpt-lbl"></div>
           <div class="mn-btn" onclick="nextMon()">&#8250;</div>
         </div>
-        <div class="stat-grid" style="margin-bottom:14px">
+        <div class="stat-grid" style="margin-bottom:12px">
           <div class="sc"><div class="l">รายรับ</div><div class="v v-inc" id="r-inc">—</div></div>
           <div class="sc"><div class="l">รายจ่าย</div><div class="v v-exp" id="r-exp">—</div></div>
           <div class="sc"><div class="l">กำไร</div><div class="v v-inc" id="r-profit">—</div></div>
           <div class="sc"><div class="l">% กำไร</div><div class="v" id="r-pct">—</div></div>
         </div>
+        <div class="stat-grid" style="margin-bottom:14px">
+          <div class="sc"><div class="l">จำนวนงาน</div><div class="v" id="r-jobs">—</div></div>
+          <div class="sc"><div class="l">ค้างชำระ</div><div class="v v-amb" id="r-credit">—</div></div>
+        </div>
         <div class="sec-lbl" style="margin-top:0">รายจ่ายแยกหมวด</div>
         <div class="catbar-wrap" id="catbar-wrap"><div class="spinner"></div></div>
       </div>
+
+      <!-- รายปี -->
       <div id="rpt-yearly" style="display:none">
+        <div class="mnav">
+          <div class="mn-btn" onclick="prevYear()">&#8249;</div>
+          <div class="mn-lbl" id="rpt-year-lbl"></div>
+          <div class="mn-btn" onclick="nextYear()">&#8250;</div>
+        </div>
         <div id="yearly-list"><div class="spinner"></div></div>
+      </div>
+
+      <!-- ช่วงวันที่ -->
+      <div id="rpt-range" style="display:none">
+        <div class="fg">
+          <label>จากวันที่</label>
+          <input type="text" id="range-from" placeholder="DD/MM/YYYY เช่น 01/06/2568">
+        </div>
+        <div class="fg">
+          <label>ถึงวันที่</label>
+          <input type="text" id="range-to" placeholder="DD/MM/YYYY เช่น 30/06/2568">
+        </div>
+        <button class="btn-save-inc" onclick="loadRangeStats()" style="margin-bottom:14px">🔍 ค้นหา</button>
+        <div id="range-result"></div>
       </div>
     </div>
 
