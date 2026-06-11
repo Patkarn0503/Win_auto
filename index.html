@@ -298,10 +298,8 @@ html,body{
 
       <!-- รายเดือน -->
       <div id="rpt-monthly">
-        <div class="mnav">
-          <div class="mn-btn" onclick="prevMon()">&#8249;</div>
-          <div class="mn-lbl" id="rpt-lbl"></div>
-          <div class="mn-btn" onclick="nextMon()">&#8250;</div>
+        <div class="fg" style="margin-bottom:10px">
+          <select id="mon-select" onchange="onMonSelect()" style="width:100%;padding:10px 11px;border:1px solid var(--border2);border-radius:6px;font-size:14px;font-family:var(--font);color:var(--text);background:var(--bg2);outline:none"></select>
         </div>
         <div class="stat-grid" style="margin-bottom:12px">
           <div class="sc"><div class="l">รายรับ</div><div class="v v-inc" id="r-inc">—</div></div>
@@ -314,18 +312,32 @@ html,body{
           <div class="sc"><div class="l">ค้างชำระ</div><div class="v v-amb" id="r-credit">—</div></div>
         </div>
         <div class="sec-lbl" style="margin-top:0">รายจ่ายแยกหมวด</div>
-        <div class="catbar-wrap" id="catbar-wrap"><div class="spinner"></div></div>
+        <div class="catbar-wrap" id="catbar-wrap"></div>
         <div id="month-detail-wrap"></div>
       </div>
 
       <!-- รายปี -->
       <div id="rpt-yearly" style="display:none">
-        <div class="mnav">
-          <div class="mn-btn" onclick="prevYear()">&#8249;</div>
-          <div class="mn-lbl" id="rpt-year-lbl"></div>
-          <div class="mn-btn" onclick="nextYear()">&#8250;</div>
+        <div class="sec-lbl" style="margin-top:0" id="rpt-year-lbl"></div>
+        <!-- กราฟแท่ง รายรับ vs รายจ่าย -->
+        <div class="sc" style="margin-bottom:8px;padding:12px">
+          <div class="l" style="margin-bottom:8px">รายรับ vs รายจ่าย รายเดือน</div>
+          <canvas id="chart-bar" height="180"></canvas>
         </div>
-        <div id="yearly-list"><div class="spinner"></div></div>
+        <!-- กราฟวงกลม หมวดรายจ่าย -->
+        <div class="sc" style="margin-bottom:8px;padding:12px">
+          <div class="l" style="margin-bottom:8px">สัดส่วนรายจ่ายแยกหมวด</div>
+          <canvas id="chart-pie" height="180"></canvas>
+        </div>
+        <!-- กราฟแท่ง สต็อก placeholder -->
+        <div class="sc" style="margin-bottom:8px;padding:12px">
+          <div class="l" style="margin-bottom:4px">สต็อก — ซื้อเข้า vs จำหน่ายออก</div>
+          <div style="font-size:9px;color:var(--text3);margin-bottom:8px">* ยังไม่มีข้อมูล รอเชื่อมระบบสต็อก</div>
+          <canvas id="chart-stock" height="120"></canvas>
+        </div>
+        <!-- ตารางสรุปรายเดือน -->
+        <div class="sec-lbl">สรุปรายเดือน</div>
+        <div id="yearly-list"></div>
       </div>
 
       <!-- ช่วงวันที่ -->
@@ -406,7 +418,6 @@ function gasPost(action, data) {
 // ===== INIT =====
 window.addEventListener('load', function(){
   setDateFields();
-  setMonthLabel();
   showApp();
   loadHome();
 });
@@ -419,8 +430,6 @@ function setDateFields(){
   document.getElementById('mob-sub').textContent=full;
   document.getElementById('inc-date').value=short;
   document.getElementById('exp-date').value=short;
-  setMonthLabel();
-  setYearLabel();
   // set default ช่วงวันที่เป็นเดือนปัจจุบัน
   var firstDay = new Date(d.getFullYear(), d.getMonth(), 1);
   var lastDay = new Date(d.getFullYear(), d.getMonth()+1, 0);
@@ -429,11 +438,6 @@ function setDateFields(){
   var rtEl = document.getElementById('range-to');
   if(rfEl) rfEl.value = toInputDate(firstDay);
   if(rtEl) rtEl.value = toInputDate(lastDay);
-}
-
-function setMonthLabel(){
-  var el=document.getElementById('rpt-lbl');
-  if(el) el.textContent=months[rptMon]+' '+(new Date().getFullYear()+543);
 }
 
 function showApp(){
@@ -506,31 +510,50 @@ function renderCredit(res){
 function renderReport(res){
   if(!res.ok) return;
   summaryCache = res;
+  buildMonSelect();
   renderMonthlyTab();
   renderYearlyTab();
 }
 
+// สร้าง dropdown เดือน
+function buildMonSelect(){
+  var sel = document.getElementById('mon-select');
+  if(!sel || sel.options.length > 0) return;
+  months.forEach(function(m, i){
+    var opt = document.createElement('option');
+    opt.value = i;
+    opt.textContent = m + ' ' + (new Date().getFullYear()+543);
+    sel.appendChild(opt);
+  });
+  sel.value = rptMon;
+}
+
+function onMonSelect(){
+  rptMon = parseInt(document.getElementById('mon-select').value);
+  renderMonthlyTab();
+}
+
 function renderMonthlyTab(){
   if(!summaryCache) return;
+  var sel = document.getElementById('mon-select');
+  if(sel) sel.value = rptMon;
   var row = summaryCache.rows[rptMon];
   if(!row) return;
   document.getElementById('r-inc').textContent = fmt(row.income);
   document.getElementById('r-exp').textContent = fmt(row.expense);
-  document.getElementById('r-profit').textContent = fmt(row.profit);
   var profEl = document.getElementById('r-profit');
-  if(profEl) profEl.className = 'v ' + (row.profit >= 0 ? 'v-inc' : 'v-exp');
+  profEl.textContent = fmt(row.profit);
+  profEl.className = 'v ' + (row.profit >= 0 ? 'v-inc' : 'v-exp');
   document.getElementById('r-pct').textContent = row.income > 0 ? row.pct + '%' : '—';
-  var jobsEl = document.getElementById('r-jobs');
-  if(jobsEl) jobsEl.textContent = row.jobs || '0';
-  var credEl = document.getElementById('r-credit');
-  if(credEl) credEl.textContent = fmt(row.credit || 0);
-  setMonthLabel();
+  document.getElementById('r-jobs').textContent = row.jobs || '0';
+  document.getElementById('r-credit').textContent = fmt(row.credit || 0);
+
+  // catbar จาก summaryCache (ไม่ยิง API)
   var catWrap = document.getElementById('catbar-wrap');
-  if(!catWrap) return;
   var expBycat = row.expBycat || {};
   var cats = Object.keys(expBycat);
   if(!cats.length){
-    catWrap.innerHTML = '<p style="font-size:10px;color:var(--text3);text-align:center;padding:14px">ยังไม่มีรายจ่ายเดือนนี้</p>';
+    catWrap.innerHTML = '<p style="font-size:10px;color:var(--text3);text-align:center;padding:10px">ยังไม่มีรายจ่ายเดือนนี้</p>';
   } else {
     var maxVal = Math.max.apply(null, cats.map(function(c){ return expBycat[c]; }));
     catWrap.innerHTML = cats.map(function(c){
@@ -540,86 +563,223 @@ function renderMonthlyTab(){
         '<span class="catbar-amt">'+fmt(expBycat[c])+'</span></div>';
     }).join('');
   }
-  // โหลดรายการของเดือนนั้น
-  loadMonthDetail();
+
+  // รายการ — กรองจาก allRows ทันที ไม่ยิง API
+  renderMonthRows();
 }
 
-function loadMonthDetail(){
-  var now = new Date();
-  // คำนวณปี ค.ศ. จาก rptMon (ใช้ปีปัจจุบัน)
-  var year = now.getFullYear();
-  var month = rptMon; // 0-based
-  var firstDay = new Date(year, month, 1);
-  var lastDay  = new Date(year, month + 1, 0);
-  function pad(n){ return String(n).padStart(2,'0'); }
-  function toISO(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
-  var from = toISO(firstDay);
-  var to   = toISO(lastDay);
+// กรอง allRows ตาม rptMon แล้ว render ทันที
+function renderMonthRows(){
   var wrap = document.getElementById('month-detail-wrap');
   if(!wrap) return;
-  wrap.innerHTML = '<div class="spinner" style="margin:10px auto"></div>';
-  gasGet('getDateRangeStats',{dateFrom: _toThaiDateStr(firstDay), dateTo: _toThaiDateStr(lastDay)}).then(function(res){
-    if(!res.ok){ wrap.innerHTML=''; return; }
-    var html = '';
-    // รายรับ
-    if(res.incRows && res.incRows.length){
-      html += '<div class="sec-lbl" style="margin-top:10px">รายรับ ('+res.incRows.length+' รายการ)</div>';
-      html += res.incRows.map(function(r){
-        return '<div class="txn"><div><div class="tn">'+(r.desc||'')+(r.customer?' · '+r.customer:'')+'</div>'+
-          '<div class="tm">'+(r.date||'')+'</div></div>'+
-          '<div><div class="ta inc">+'+fmt(r.total)+'</div>'+
-          '<div>'+payBadge(r.payType)+'</div></div></div>';
-      }).join('');
-    }
-    // รายจ่าย
-    if(res.expRows && res.expRows.length){
-      html += '<div class="sec-lbl" style="margin-top:10px">รายจ่าย ('+res.expRows.length+' รายการ)</div>';
-      html += res.expRows.map(function(r){
-        return '<div class="txn"><div><div class="tn">'+(r.desc||'')+'</div>'+
-          '<div class="tm">'+(r.date||'')+' · '+(r.category||'')+'</div></div>'+
-          '<div><div class="ta exp">-'+fmt(r.amount)+'</div></div></div>';
-      }).join('');
-    }
-    if(!html) html = '<p style="color:var(--text3);text-align:center;padding:14px;font-size:10px">ยังไม่มีรายการเดือนนี้</p>';
-    wrap.innerHTML = html;
-  }).catch(function(){ wrap.innerHTML=''; });
+  var thYear = new Date().getFullYear() + 543;
+  var mon = rptMon + 1; // 1-based
+
+  function parseDMY(str){
+    if(!str) return null;
+    var p = String(str).split('/');
+    if(p.length !== 3) return null;
+    return { d: parseInt(p[0]), m: parseInt(p[1]), y: parseInt(p[2]) };
+  }
+
+  var incRows = [], expRows = [];
+  allRows.forEach(function(r){
+    var dt = parseDMY(r.date);
+    if(!dt || dt.y !== thYear || dt.m !== mon) return;
+    if(r.type === 'income') incRows.push(r);
+    else expRows.push(r);
+  });
+
+  var html = '';
+  if(incRows.length){
+    html += '<div class="sec-lbl" style="margin-top:10px">รายรับ ('+incRows.length+' รายการ)</div>';
+    html += incRows.map(function(r){
+      return '<div class="txn"><div><div class="tn">'+(r.desc||'')+(r.customer?' · '+r.customer:'')+'</div>'+
+        '<div class="tm">'+(r.date||'')+'</div></div>'+
+        '<div><div class="ta inc">+'+fmt(r.total)+'</div>'+payBadge(r.payType)+'</div></div>';
+    }).join('');
+  }
+  if(expRows.length){
+    html += '<div class="sec-lbl" style="margin-top:10px">รายจ่าย ('+expRows.length+' รายการ)</div>';
+    html += expRows.map(function(r){
+      return '<div class="txn"><div><div class="tn">'+(r.desc||'')+'</div>'+
+        '<div class="tm">'+(r.date||'')+' · '+(r.category||'')+'</div></div>'+
+        '<div><div class="ta exp">-'+fmt(r.amount)+'</div></div></div>';
+    }).join('');
+  }
+  if(!html) html = '<p style="color:var(--text3);text-align:center;padding:14px;font-size:10px">ยังไม่มีรายการเดือนนี้</p>';
+  wrap.innerHTML = html;
 }
 
-// แปลง Date object → DD/MM/YYYY (พ.ศ.) สำหรับส่ง GAS
-function _toThaiDateStr(d){
-  function pad(n){ return String(n).padStart(2,'0'); }
-  return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+(d.getFullYear()+543);
-}
+// ===== YEARLY TAB =====
+var _chartBar = null, _chartPie = null, _chartStock = null;
 
 function renderYearlyTab(){
   if(!summaryCache) return;
-  setYearLabel();
+  var lbl = document.getElementById('rpt-year-lbl');
+  if(lbl) lbl.textContent = 'ภาพรวมปี ' + summaryCache.year;
+
+  // ตารางสรุปรายเดือน
   var yl = document.getElementById('yearly-list');
-  if(!yl) return;
-  // ถ้าปีที่เลือกไม่ใช่ปีของ cache → แสดงว่าไม่มีข้อมูล
-  if(rptYear !== summaryCache.year){
-    yl.innerHTML = '<p style="font-size:11px;color:var(--text3);text-align:center;padding:20px">ไม่มีข้อมูลปี '+rptYear+'<br><span style="font-size:10px">ข้อมูลที่โหลดอยู่เป็นปี '+summaryCache.year+'</span></p>';
-    return;
-  }
-  var hasData = summaryCache.rows.some(function(r){ return r.income || r.expense; });
+  var rows = summaryCache.rows;
+  var hasData = rows.some(function(r){ return r.income || r.expense; });
   if(!hasData){
     yl.innerHTML = '<p style="font-size:11px;color:var(--text3);text-align:center;padding:20px">ยังไม่มีข้อมูลปีนี้</p>';
+  } else {
+    yl.innerHTML = rows.map(function(r){
+      var hasAny = r.income || r.expense;
+      return '<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid var(--border)">'+
+        '<div><div style="font-size:12px;font-weight:500">'+r.month+'</div>'+
+        (hasAny?'<div style="font-size:10px;color:var(--text3)">รับ '+fmt(r.income)+' / จ่าย '+fmt(r.expense)+'</div>':'<div style="font-size:10px;color:var(--text3)">—</div>')+
+        '</div><div style="text-align:right">'+
+        (hasAny?'<div class="ta '+(r.profit>=0?'inc':'exp')+'" style="font-size:12px">'+(r.profit>=0?'+':'')+fmt(r.profit)+'</div>':'')+
+        (hasAny&&r.pct?'<div style="font-size:10px;color:var(--text3)">'+r.pct+'%</div>':'')+
+        '</div></div>';
+    }).join('');
+  }
+
+  // วาดกราฟ
+  drawBarChart(rows);
+  drawPieChart(rows);
+  drawStockChart();
+}
+
+// กราฟแท่ง รายรับ vs รายจ่าย
+function drawBarChart(rows){
+  var canvas = document.getElementById('chart-bar');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.offsetWidth || 300;
+  canvas.width = W; canvas.height = 180;
+  ctx.clearRect(0,0,W,180);
+
+  var labels = rows.map(function(r){ return r.month.substring(0,3); });
+  var incVals = rows.map(function(r){ return r.income || 0; });
+  var expVals = rows.map(function(r){ return r.expense || 0; });
+  var maxVal = Math.max.apply(null, incVals.concat(expVals).concat([1]));
+
+  var pad = {l:8, r:8, t:10, b:28};
+  var chartH = 180 - pad.t - pad.b;
+  var barW = Math.floor((W - pad.l - pad.r) / (labels.length * 2 + labels.length * 0.5));
+  var gap = Math.floor(barW * 0.25);
+
+  ctx.font = '9px Sarabun,sans-serif';
+  ctx.textAlign = 'center';
+
+  labels.forEach(function(lbl, i){
+    var x = pad.l + i * (barW*2 + gap + 4);
+    var hInc = Math.round(incVals[i] / maxVal * chartH);
+    var hExp = Math.round(expVals[i] / maxVal * chartH);
+
+    // รายรับ — เขียว
+    ctx.fillStyle = '#1D9E75';
+    ctx.fillRect(x, pad.t + chartH - hInc, barW, hInc);
+    // รายจ่าย — แดง
+    ctx.fillStyle = '#D85A30';
+    ctx.fillRect(x + barW + 2, pad.t + chartH - hExp, barW, hExp);
+    // label เดือน
+    ctx.fillStyle = '#9e9e97';
+    ctx.fillText(lbl, x + barW, 180 - 6);
+  });
+
+  // legend
+  ctx.fillStyle = '#1D9E75'; ctx.fillRect(W-90, 4, 8, 8);
+  ctx.fillStyle = '#6b6b65'; ctx.textAlign='left'; ctx.font='9px Sarabun,sans-serif';
+  ctx.fillText('รายรับ', W-79, 12);
+  ctx.fillStyle = '#D85A30'; ctx.fillRect(W-45, 4, 8, 8);
+  ctx.fillStyle = '#6b6b65'; ctx.fillText('รายจ่าย', W-34, 12);
+}
+
+// กราฟวงกลม หมวดรายจ่าย
+function drawPieChart(rows){
+  var canvas = document.getElementById('chart-pie');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.offsetWidth || 300;
+  canvas.width = W; canvas.height = 180;
+  ctx.clearRect(0,0,W,180);
+
+  // รวม expBycat จากทุกเดือน
+  var totals = {};
+  rows.forEach(function(r){
+    Object.keys(r.expBycat||{}).forEach(function(c){
+      totals[c] = (totals[c]||0) + r.expBycat[c];
+    });
+  });
+  var cats = Object.keys(totals);
+  if(!cats.length){
+    ctx.fillStyle = '#9e9e97'; ctx.font = '11px Sarabun,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText('ยังไม่มีข้อมูลรายจ่าย', W/2, 90);
     return;
   }
-  yl.innerHTML = summaryCache.rows.map(function(r){
-    var hasAny = r.income || r.expense;
-    return '<div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid var(--border)">'+
-      '<div><div style="font-size:13px;font-weight:500">'+r.month+'</div>'+
-      (hasAny?'<div style="font-size:10px;color:var(--text3)">รับ '+fmt(r.income)+' / จ่าย '+fmt(r.expense)+'</div>':'<div style="font-size:10px;color:var(--text3)">—</div>')+
-      '</div><div style="text-align:right">'+
-      (hasAny?'<div class="ta '+(r.profit>=0?'inc':'exp')+'" style="font-size:13px">'+(r.profit>=0?'+':'')+fmt(r.profit)+'</div>':'')+
-      (hasAny&&r.pct?'<div style="font-size:10px;color:var(--text3)">'+r.pct+'%</div>':'')+
-      '</div></div>';
-  }).join('');
+
+  var colors = ['#1D9E75','#D85A30','#854F0B','#0C447C','#6b6b65','#c45ab3','#2196f3'];
+  var total = cats.reduce(function(s,c){ return s+totals[c]; }, 0);
+  var cx = 80, cy = 85, r = 65;
+  var angle = -Math.PI/2;
+
+  cats.forEach(function(c, i){
+    var slice = totals[c]/total * Math.PI * 2;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle+slice);
+    ctx.closePath();
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fill();
+    angle += slice;
+  });
+
+  // legend ด้านขวา
+  ctx.font = '10px Sarabun,sans-serif'; ctx.textAlign = 'left';
+  cats.forEach(function(c, i){
+    var y = 20 + i*20;
+    ctx.fillStyle = colors[i % colors.length];
+    ctx.fillRect(W/2+10, y-8, 10, 10);
+    ctx.fillStyle = '#1a1a18';
+    var pct = Math.round(totals[c]/total*100);
+    ctx.fillText(c+' '+pct+'%', W/2+24, y);
+  });
+}
+
+// กราฟสต็อก placeholder
+function drawStockChart(){
+  var canvas = document.getElementById('chart-stock');
+  if(!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var W = canvas.offsetWidth || 300;
+  canvas.width = W; canvas.height = 120;
+  ctx.clearRect(0,0,W,120);
+
+  var labels = months.map(function(m){ return m.substring(0,3); });
+  var buyVals  = [0,0,0,0,0,0,0,0,0,0,0,0]; // placeholder
+  var sellVals = [0,0,0,0,0,0,0,0,0,0,0,0]; // placeholder
+  var pad = {l:8,r:8,t:10,b:28};
+  var chartH = 120 - pad.t - pad.b;
+  var maxVal = 1;
+  var barW = Math.floor((W-pad.l-pad.r)/(labels.length*2+labels.length*0.5));
+  var gap = Math.floor(barW*0.25);
+
+  ctx.font = '9px Sarabun,sans-serif'; ctx.textAlign='center';
+  labels.forEach(function(lbl, i){
+    var x = pad.l + i*(barW*2+gap+4);
+    // placeholder bar ความสูง 2px แสดงว่ายังไม่มีข้อมูล
+    ctx.fillStyle = '#e0dfd8';
+    ctx.fillRect(x, pad.t+chartH-2, barW, 2);
+    ctx.fillRect(x+barW+2, pad.t+chartH-2, barW, 2);
+    ctx.fillStyle = '#9e9e97';
+    ctx.fillText(lbl, x+barW, 120-6);
+  });
+
+  // legend
+  ctx.fillStyle='#854F0B'; ctx.fillRect(W-90,4,8,8);
+  ctx.fillStyle='#6b6b65'; ctx.textAlign='left';
+  ctx.fillText('ซื้อเข้า',W-79,12);
+  ctx.fillStyle='#0C447C'; ctx.fillRect(W-38,4,8,8);
+  ctx.fillStyle='#6b6b65'; ctx.fillText('จำหน่าย',W-27,12);
 }
 
 function toThaiDate(isoStr){
-  // แปลง YYYY-MM-DD (ค.ศ.) → DD/MM/YYYY (พ.ศ.)
   if(!isoStr) return '';
   var parts = isoStr.split('-');
   if(parts.length !== 3) return isoStr;
@@ -671,29 +831,8 @@ function loadRangeStats(){
   }).catch(function(){ result.innerHTML='<p style="color:var(--red);text-align:center;padding:14px">ไม่สามารถโหลดข้อมูลได้</p>'; });
 }
 
-var rptYear = new Date().getFullYear() + 543; // พ.ศ.
-
 function loadReport(){
-  setMonthLabel();
   gasGet('getMonthlySummary').then(renderReport).catch(function(){});
-}
-
-function setYearLabel(){
-  var el = document.getElementById('rpt-year-lbl');
-  if(el) el.textContent = 'ปี ' + rptYear;
-}
-
-function prevYear(){
-  rptYear--;
-  setYearLabel();
-  // getMonthlySummary ดึงแค่ปีปัจจุบัน — แสดง empty สำหรับปีอื่น
-  if(summaryCache) renderYearlyTab();
-}
-
-function nextYear(){
-  rptYear++;
-  setYearLabel();
-  if(summaryCache) renderYearlyTab();
 }
 
 function setRTab(tab){
@@ -704,10 +843,14 @@ function setRTab(tab){
     if(panel) panel.style.display = t===tab ? 'block' : 'none';
   });
   if(tab==='monthly') renderMonthlyTab();
-  if(tab==='yearly') renderYearlyTab();
+  if(tab==='yearly'){
+    renderYearlyTab();
+    // วาดกราฟหลังจาก canvas visible
+    setTimeout(function(){
+      if(summaryCache) { drawBarChart(summaryCache.rows); drawPieChart(summaryCache.rows); drawStockChart(); }
+    }, 50);
+  }
 }
-function prevMon(){ rptMon=(rptMon-1+12)%12; renderMonthlyTab(); }
-function nextMon(){ rptMon=(rptMon+1)%12; renderMonthlyTab(); }
 
 // ===== FORM LOGIC =====
 function calcTotal(){
