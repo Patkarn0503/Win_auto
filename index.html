@@ -97,11 +97,16 @@ body{
 /* ===== APP LAYOUT ===== */
 #app-wrap{display:none}
 
-/* Desktop — 3 column */
+/* Mobile — single column */
+@media(max-width:899px){
+  #app-wrap{display:block}
+}
+
+/* Desktop — rail + center */
 @media(min-width:900px){
   #app-wrap{
     display:grid;
-    grid-template-columns:1fr;
+    grid-template-columns:60px 1fr;
     grid-template-rows:100vh;
     height:100vh;
     overflow:hidden;
@@ -113,6 +118,40 @@ body{
   .topnav-mobile{display:none !important}
   /* content area ใน center ไม่ต้อง padding-bottom สำหรับ bottomnav */
   .center-scroll{padding-bottom:24px !important}
+}
+
+/* ===== LEFT RAIL (desktop only) ===== */
+.left-rail{
+  display:none;
+  background:var(--ink);
+  flex-direction:column;align-items:center;
+  padding:14px 0;gap:8px;
+  height:100vh;overflow:hidden;
+}
+@media(min-width:900px){
+  .left-rail{display:flex}
+}
+.rail-logo{
+  width:36px;height:36px;border-radius:9px;
+  background:var(--red);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;font-weight:700;font-family:var(--font-d);
+  margin-bottom:10px;
+}
+.rail-btn{
+  width:40px;height:40px;border-radius:9px;border:none;
+  background:transparent;color:rgba(255,255,255,.55);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:16px;transition:.15s;position:relative;
+}
+.rail-btn:hover{background:rgba(255,255,255,.08);color:#fff}
+.rail-btn.active{background:rgba(255,255,255,.15);color:#fff}
+.rail-btn i{font-size:18px}
+.rail-spacer{flex:1}
+.rail-badge{
+  position:absolute;top:4px;right:4px;
+  background:var(--red);color:#fff;font-size:8px;
+  border-radius:8px;padding:1px 4px;min-width:14px;text-align:center;
 }
 
 
@@ -434,6 +473,18 @@ body{
 <!-- APP WRAP -->
 <div id="app-wrap">
 
+  <!-- LEFT RAIL (desktop only) -->
+  <aside class="left-rail">
+    <div class="rail-logo">W</div>
+    <button class="rail-btn active" id="rb-home" onclick="nav('home')" title="หน้าหลัก"><i class="ti ti-home"></i></button>
+    <button class="rail-btn" id="rb-list" onclick="nav('list')" title="รายการ"><i class="ti ti-list"></i></button>
+    <button class="rail-btn" id="rb-stock" onclick="nav('stock')" title="สต็อก"><i class="ti ti-package"></i><span class="rail-badge" id="stock-rail-badge" style="display:none">!</span></button>
+    <button class="rail-btn" id="rb-report" onclick="nav('report')" title="รายงาน"><i class="ti ti-chart-bar"></i></button>
+    <div class="rail-spacer"></div>
+    <button class="rail-btn" id="rb-settings" onclick="nav('settings')" title="ตั้งค่า" style="display:none"><i class="ti ti-settings"></i></button>
+    <button class="rail-btn" onclick="doLogout()" title="ออกจากระบบ"><i class="ti ti-logout"></i></button>
+  </aside>
+
   <!-- CENTER PANEL -->
   <main class="center-panel">
 
@@ -444,7 +495,7 @@ body{
         <div class="tnm-sub" id="mob-sub"></div>
       </div>
       <div style="display:flex;align-items:center;gap:7px">
-        <span class="ver-tag">v0.5.1</span>
+        <span class="ver-tag">v0.5.2</span>
         <button id="btn-settings" onclick="nav('settings')" style="display:none;background:none;border:none;font-size:18px;cursor:pointer;padding:2px">⚙️</button>
         <button onclick="doLogout()" style="background:none;border:none;font-size:11px;color:var(--ink3);cursor:pointer;font-family:var(--font)">ออก</button>
       </div>
@@ -457,7 +508,7 @@ body{
         <div class="ch-page" id="ch-page">หน้าหลัก</div>
       </div>
       <div class="ch-actions">
-        <span class="ver-tag">v0.5.1</span>
+        <span class="ver-tag">v0.5.2</span>
         <button class="icon-sm" id="dsk-settings" onclick="nav('settings')" style="display:none"><i class="ti ti-settings"></i></button>
         <button class="icon-sm" onclick="doLogout()" title="ออก"><i class="ti ti-logout"></i></button>
         <button class="btn-share" onclick="nav('inc')"><i class="ti ti-plus" style="font-size:13px"></i> รายรับ</button>
@@ -809,6 +860,10 @@ function nav(name){
   document.querySelectorAll('.bn-btn').forEach(function(b){b.classList.remove('active');});
   var bnEl=document.getElementById('bn-'+bnTarget);
   if(bnEl) bnEl.classList.add('active');
+  // sync left rail desktop
+  document.querySelectorAll('.rail-btn').forEach(function(b){b.classList.remove('active');});
+  var rbEl=document.getElementById('rb-'+bnTarget);
+  if(rbEl) rbEl.classList.add('active');
   window.scrollTo(0,0);
   // scroll center panel to top
   var cs=document.querySelector('.center-scroll');
