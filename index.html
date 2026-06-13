@@ -1166,14 +1166,13 @@ function renderStockList(){
     return '<div class="sc stock-card" data-rowindex="'+s.rowIndex+'" style="margin-bottom:6px;padding:10px 12px;cursor:pointer">'+
       '<div style="display:flex;justify-content:space-between;align-items:center">'+
         '<div>'+
-          '<div style="font-size:13px;font-weight:500">'+s.name+'</div>'+
-          '<div style="font-size:10px;color:var(--text3)">รหัส: '+s.code+' · หน่วย: '+(s.unit||'—')+'</div>'+
-          (s.cost ? '<div style="font-size:10px;color:var(--text3)">ต้นทุน: '+fmt(s.cost)+' ฿/'+s.unit+'</div>' : '')+
+          '<div style="font-size:11px;color:var(--text3);font-weight:500">'+s.code+' '+s.name+'</div>'+
+          '<div style="font-size:10px;color:var(--text3);margin-top:2px">'+(s.cost ? 'ต้นทุน '+fmt(s.cost)+' ฿/'+s.unit : '—')+'</div>'+
+          (low?'<div style="font-size:9px;color:#D85A30;margin-top:2px">⚠️ ใกล้หมด</div>':'')+
         '</div>'+
-        '<div style="text-align:right">'+
-          '<div style="font-size:18px;'+qtyColor+'">'+s.qty+'</div>'+
-          '<div style="font-size:9px;color:var(--text3)">'+(s.unit||'หน่วย')+'</div>'+
-          (low?'<div style="font-size:9px;color:#D85A30">⚠️ ใกล้หมด</div>':'')+
+        '<div style="text-align:right;white-space:nowrap">'+
+          '<span style="font-size:20px;'+qtyColor+'">'+s.qty+'</span>'+
+          '<span style="font-size:11px;color:var(--text3);margin-left:3px">'+(s.unit||'หน่วย')+'</span>'+
         '</div>'+
       '</div>'+
       // ปุ่มซ่อน — แสดงเมื่อกดการ์ด
