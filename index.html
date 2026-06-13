@@ -1127,12 +1127,19 @@ var stockFiltered = [];
 var incStockLines = []; // [{code,name,unit,qty,rowIndex}] สำหรับฟอร์มรายรับ
 
 function loadStock(){
+  var wrap = document.getElementById('stock-list');
+  if(wrap) wrap.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
   gasGet('getStock').then(function(res){
-    if(!res.ok) return;
+    if(!res.ok){
+      if(wrap) wrap.innerHTML = '<p style="color:var(--red);text-align:center;padding:20px;font-size:11px">โหลดไม่สำเร็จ: '+(res.error||'')+'</p>';
+      return;
+    }
     stockCache = res.items || [];
     filterStock();
     checkStockAlert();
     rebuildStockSelect();
+  }).catch(function(err){
+    if(wrap) wrap.innerHTML = '<p style="color:var(--red);text-align:center;padding:20px;font-size:11px">เชื่อมต่อไม่ได้</p>';
   });
 }
 
@@ -1430,4 +1437,4 @@ if('serviceWorker' in navigator){
 }
 </script>
 </body>
-</html>
+</html>>
