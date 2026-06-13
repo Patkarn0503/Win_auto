@@ -159,8 +159,8 @@ html,body{
 .bn-btn{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:8px;color:var(--text3);cursor:pointer;background:none;border:none;font-family:var(--font);padding:5px 6px;border-radius:5px}
 .bn-btn.active{color:var(--green-mid)}
 .bn-ic{font-size:19px}
-.lf-type{padding:8px 4px;border-radius:6px;border:1px solid var(--border2);font-size:11px;font-family:var(--font);background:var(--bg2);color:var(--text2);cursor:pointer}
-.lf-type.on{background:var(--green) !important;color:#fff !important;border-color:var(--green) !important;font-weight:500}
+.lf-type{padding:8px 4px;border-radius:6px;border:1px solid var(--border2);font-size:11px;font-family:var(--font);background:var(--bg2);color:var(--text2);cursor:pointer;-webkit-appearance:none;appearance:none}
+.lf-type.on{background:var(--green) !important;color:#fff !important;border-color:var(--green) !important;font-weight:500 !important}
 
 .detail-row{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px}
 .detail-row:last-child{border-bottom:none}
@@ -1038,8 +1038,10 @@ var listType = 'all';
 
 function setListType(t){
   listType = t;
+  // id ปุ่มใช้ lft-all, lft-inc, lft-exp — map key ให้ตรง
+  var idMap = {all:'all', income:'inc', expense:'exp'};
   ['all','income','expense'].forEach(function(k){
-    var el = document.getElementById('lft-'+k);
+    var el = document.getElementById('lft-'+idMap[k]);
     if(el) el.classList.toggle('on', k===t);
   });
   filterList();
@@ -1047,8 +1049,9 @@ function setListType(t){
 
 function resetListFilter(){
   listType = 'all';
+  var idMap = {all:'all', income:'inc', expense:'exp'};
   ['all','income','expense'].forEach(function(k){
-    var el = document.getElementById('lft-'+k);
+    var el = document.getElementById('lft-'+idMap[k]);
     if(el) el.classList.toggle('on', k==='all');
   });
   document.getElementById('list-search').value = '';
@@ -1063,8 +1066,9 @@ function renderListPage(){
   document.getElementById('lf-from').value = '';
   document.getElementById('lf-to').value = '';
   listType = 'all';
+  var idMap = {all:'all', income:'inc', expense:'exp'};
   ['all','income','expense'].forEach(function(k){
-    var el = document.getElementById('lft-'+k);
+    var el = document.getElementById('lft-'+idMap[k]);
     if(el) el.classList.toggle('on', k==='all');
   });
   listFiltered = allRows;
@@ -1088,8 +1092,9 @@ function navToListMonth(type){
     document.getElementById('lf-from').value = firstDay;
     document.getElementById('lf-to').value   = lastDay;
     listType = type;
+    var idMap = {all:'all', income:'inc', expense:'exp'};
     ['all','income','expense'].forEach(function(k){
-      var el = document.getElementById('lft-'+k);
+      var el = document.getElementById('lft-'+idMap[k]);
       if(el) el.classList.toggle('on', k===type);
     });
     filterList();
