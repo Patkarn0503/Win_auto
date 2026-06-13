@@ -160,7 +160,7 @@ html,body{
 .bn-btn.active{color:var(--green-mid)}
 .bn-ic{font-size:19px}
 .lf-type{padding:8px 4px;border-radius:6px;border:1px solid var(--border2);font-size:11px;font-family:var(--font);background:var(--bg2);color:var(--text2);cursor:pointer}
-.lf-type.on{background:var(--green);color:#fff;border-color:var(--green);font-weight:500}
+.lf-type.on{background:var(--green) !important;color:#fff !important;border-color:var(--green) !important;font-weight:500}
 
 .detail-row{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px}
 .detail-row:last-child{border-bottom:none}
@@ -194,9 +194,9 @@ html,body{
     <!-- HOME -->
     <div id="page-home" class="page active">
       <div class="stat-grid">
-        <div class="sc"><div class="l">รายรับเดือนนี้</div><div class="v v-inc" id="s-inc">—</div><div class="s" id="s-jobs"></div></div>
-        <div class="sc"><div class="l">รายจ่ายเดือนนี้</div><div class="v v-exp" id="s-exp">—</div></div>
-        <div class="sc"><div class="l">กำไรเบื้องต้น</div><div class="v v-inc" id="s-profit">—</div></div>
+        <div class="sc" onclick="navToListMonth('income')" style="cursor:pointer"><div class="l">รายรับเดือนนี้ 👆</div><div class="v v-inc" id="s-inc">—</div><div class="s" id="s-jobs"></div></div>
+        <div class="sc" onclick="navToListMonth('expense')" style="cursor:pointer"><div class="l">รายจ่ายเดือนนี้ 👆</div><div class="v v-exp" id="s-exp">—</div></div>
+        <div class="sc" onclick="navToListMonth('all')" style="cursor:pointer"><div class="l">กำไรเบื้องต้น 👆</div><div class="v v-inc" id="s-profit">—</div></div>
         <div class="sc" onclick="nav('credit');setBnav('credit')" style="cursor:pointer"><div class="l">ค้างรับ 👆</div><div class="v v-amb" id="s-credit">—</div><div class="s" style="color:var(--amber)">กดเพื่อดูรายการ</div></div>
       </div>
       <div class="btn2">
@@ -1069,6 +1069,31 @@ function renderListPage(){
   });
   listFiltered = allRows;
   renderListRows();
+}
+
+// nav ไปหน้า list พร้อม filter เดือนปัจจุบัน + type
+function navToListMonth(type){
+  var now = new Date();
+  var y = now.getFullYear();
+  var m = now.getMonth() + 1;
+  // สร้าง YYYY-MM-DD สำหรับ input[type=date]
+  var pad = function(n){ return String(n).padStart(2,'0'); };
+  var firstDay = y + '-' + pad(m) + '-01';
+  var lastDay = y + '-' + pad(m) + '-' + pad(new Date(y, m, 0).getDate());
+
+  nav('list'); setBnav('list');
+
+  // set filter หลัง nav (nav จะ reset ก่อน ต้อง set ทีหลัง)
+  setTimeout(function(){
+    document.getElementById('lf-from').value = firstDay;
+    document.getElementById('lf-to').value   = lastDay;
+    listType = type;
+    ['all','income','expense'].forEach(function(k){
+      var el = document.getElementById('lft-'+k);
+      if(el) el.classList.toggle('on', k===type);
+    });
+    filterList();
+  }, 0);
 }
 
 function filterList(){
