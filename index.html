@@ -401,6 +401,17 @@ html,body{
       <button class="btn-cancel" onclick="nav('stock');setBnav('stock')">ยกเลิก</button>
     </div>
 
+    <!-- STOCK OUT FORM (ตัดออกด้วยมือ) -->
+    <div id="page-stock-out" class="page">
+      <div class="sec-lbl" style="margin-top:0" id="sout-title">ตัดสินค้าออกสต็อก</div>
+      <div class="fg"><label>วันที่</label><input type="text" id="sout-date" readonly></div>
+      <div class="fg"><label>จำนวนที่ตัดออก</label><input type="number" placeholder="0" id="sout-qty" min="1"></div>
+      <div class="fg"><label>หมายเหตุ / สาเหตุ</label><input type="text" placeholder="เช่น ของเสีย / ใช้ภายใน / นับผิด" id="sout-note"></div>
+      <input type="hidden" id="sout-row">
+      <button class="btn-save-exp" onclick="saveStockOut()">✂️ ตัดออก</button>
+      <button class="btn-cancel" onclick="nav('stock');setBnav('stock')">ยกเลิก</button>
+    </div>
+
   </div><!-- ปิด content -->
 
   <div class="bottomnav">
@@ -435,7 +446,7 @@ var summaryCache=null;
 var editMode=false, editRowIndex=0, editType='';
 var allRows=[], listOffset=0, listLimit=30, listFiltered=[];
 var months=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];
-var pageNames={home:'หน้าหลัก',inc:'บันทึกรายรับ',exp:'บันทึกรายจ่าย',credit:'ค้างชำระ',report:'รายงาน',list:'รายการทั้งหมด',stock:'สต็อกสินค้า','stock-form':'เพิ่ม/แก้ไขสินค้า','stock-in':'รับสินค้าเข้า'};
+var pageNames={home:'หน้าหลัก',inc:'บันทึกรายรับ',exp:'บันทึกรายจ่าย',credit:'ค้างชำระ',report:'รายงาน',list:'รายการทั้งหมด',stock:'สต็อกสินค้า','stock-form':'เพิ่ม/แก้ไขสินค้า','stock-in':'รับสินค้าเข้า','stock-out':'ตัดสินค้าออก'};
 
 // ===== API =====
 function gasGet(action, params) {
@@ -1157,6 +1168,7 @@ function renderStockList(){
       '</div>'+
       '<div style="display:flex;gap:6px;margin-top:8px">'+
         '<button onclick="showStockIn('+s.rowIndex+')" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--green);background:none;font-size:11px;font-family:var(--font);color:var(--green);cursor:pointer">+ รับเข้า</button>'+
+        '<button onclick="showStockOut('+s.rowIndex+')" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--red);background:none;font-size:11px;font-family:var(--font);color:var(--red);cursor:pointer">➖ ตัดออก</button>'+
         '<button onclick="showEditStock('+s.rowIndex+')" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--border2);background:none;font-size:11px;font-family:var(--font);color:var(--text2);cursor:pointer">✏️ แก้ไข</button>'+
       '</div>'+
     '</div>';
@@ -1245,6 +1257,42 @@ function saveStockIn(){
   };
   gasGet('stockIn', {payload: encodeURIComponent(JSON.stringify(data))}).then(function(res){
     if(res.ok){ toast('✅ รับเข้า '+qty+' หน่วย'); loadStock(); nav('stock'); setBnav('stock'); }
+    else toast('❌ '+res.error);
+  });
+}
+
+// เปิดหน้าตัดสต็อกด้วยมือ
+function showStockOut(rowIndex){
+  var s = stockCache.find(function(x){ return x.rowIndex === rowIndex; });
+  if(!s) return;
+  document.getElementById('sout-title').textContent = 'ตัดออก: '+s.name+' (คงเหลือ '+s.qty+' '+s.unit+')';
+  document.getElementById('sout-qty').value  = '';
+  document.getElementById('sout-note').value = '';
+  document.getElementById('sout-row').value  = rowIndex;
+  var d = new Date();
+  function pad(n){ return String(n).padStart(2,'0'); }
+  document.getElementById('sout-date').value = pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+(d.getFullYear()+543);
+  nav('stock-out');
+}
+
+// บันทึกตัดสต็อกด้วยมือ
+function saveStockOut(){
+  var qty = parseFloat(document.getElementById('sout-qty').value);
+  if(!qty || qty <= 0){ toast('⚠️ กรุณากรอกจำนวน'); return; }
+  var rowIndex = parseInt(document.getElementById('sout-row').value);
+  var s = stockCache.find(function(x){ return x.rowIndex === rowIndex; });
+  // แจ้งเตือนถ้าตัดเกินคงเหลือ
+  if(s && qty > s.qty){
+    toast('⚠️ จำนวนที่ตัดออก ('+qty+') เกินคงเหลือ ('+s.qty+')');
+    return;
+  }
+  var data = {
+    rowIndex: rowIndex,
+    qty: qty,
+    note: document.getElementById('sout-note').value.trim() || 'ตัดออกด้วยมือ'
+  };
+  gasGet('deductStockManual', {payload: encodeURIComponent(JSON.stringify(data))}).then(function(res){
+    if(res.ok){ toast('✅ ตัดออก '+qty+' หน่วย (คงเหลือ '+res.newQty+')'); loadStock(); nav('stock'); setBnav('stock'); }
     else toast('❌ '+res.error);
   });
 }
