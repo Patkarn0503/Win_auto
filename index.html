@@ -502,7 +502,8 @@ function nav(name){
   document.getElementById('mob-title').textContent = pageNames[name] || '';
   window.scrollTo(0,0);
   if(name==='list') renderListPage();
-  if(name==='stock') loadStock();
+  // ใช้ cache แทน — ไม่ยิง API ทุกครั้งที่เปิดหน้าสต็อก
+  if(name==='stock'){ filterStock(); checkStockAlert(); }
   if(name==='inc'){ incStockLines=[]; document.getElementById('stock-items-wrap').innerHTML=''; }
 }
 
@@ -540,6 +541,15 @@ function loadHome(){
   gasGet('getMonthlySummary').then(renderReport).catch(function(){});
   gasGet('getAllRows',{offset:0,limit:100}).then(function(res){
     if(res.ok){ allRows=res.rows; listFiltered=res.rows; }
+  }).catch(function(){});
+  // โหลดสต็อกตอน init — ใช้ cache จนกว่าจะมีการเปลี่ยนแปลง
+  gasGet('getStock').then(function(res){
+    if(res.ok){
+      stockCache = res.items || [];
+      checkStockAlert();
+      rebuildStockSelect();
+      renderStockList();
+    }
   }).catch(function(){});
 }
 
@@ -1151,10 +1161,10 @@ function renderStockList(){
     return;
   }
   wrap.innerHTML = stockFiltered.map(function(s){
-    var low = s.qty <= (s.minQty||0);
+    var low = s.qty <= (s.minQty||0) && s.minQty > 0;
     var qtyColor = low ? 'color:#D85A30;font-weight:600' : 'color:var(--green-mid);font-weight:600';
-    return '<div class="sc" style="margin-bottom:6px;padding:10px 12px">'+
-      '<div style="display:flex;justify-content:space-between;align-items:flex-start">'+
+    return '<div class="sc stock-card" data-rowindex="'+s.rowIndex+'" style="margin-bottom:6px;padding:10px 12px;cursor:pointer">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center">'+
         '<div>'+
           '<div style="font-size:13px;font-weight:500">'+s.name+'</div>'+
           '<div style="font-size:10px;color:var(--text3)">รหัส: '+s.code+' · หน่วย: '+(s.unit||'—')+'</div>'+
@@ -1166,13 +1176,28 @@ function renderStockList(){
           (low?'<div style="font-size:9px;color:#D85A30">⚠️ ใกล้หมด</div>':'')+
         '</div>'+
       '</div>'+
-      '<div style="display:flex;gap:6px;margin-top:8px">'+
-        '<button onclick="showStockIn('+s.rowIndex+')" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--green);background:none;font-size:11px;font-family:var(--font);color:var(--green);cursor:pointer">+ รับเข้า</button>'+
-        '<button onclick="showStockOut('+s.rowIndex+')" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--red);background:none;font-size:11px;font-family:var(--font);color:var(--red);cursor:pointer">➖ ตัดออก</button>'+
-        '<button onclick="showEditStock('+s.rowIndex+')" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--border2);background:none;font-size:11px;font-family:var(--font);color:var(--text2);cursor:pointer">✏️ แก้ไข</button>'+
+      // ปุ่มซ่อน — แสดงเมื่อกดการ์ด
+      '<div class="stock-actions" style="display:none;gap:6px;margin-top:8px">'+
+        '<button onclick="showStockIn('+s.rowIndex+');event.stopPropagation()" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--green);background:none;font-size:11px;font-family:var(--font);color:var(--green);cursor:pointer">+ รับเข้า</button>'+
+        '<button onclick="showStockOut('+s.rowIndex+');event.stopPropagation()" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--red);background:none;font-size:11px;font-family:var(--font);color:var(--red);cursor:pointer">➖ ตัดออก</button>'+
+        '<button onclick="showEditStock('+s.rowIndex+');event.stopPropagation()" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--border2);background:none;font-size:11px;font-family:var(--font);color:var(--text2);cursor:pointer">✏️ แก้ไข</button>'+
       '</div>'+
     '</div>';
   }).join('');
+
+  // toggle ปุ่มเมื่อกดการ์ด
+  wrap.onclick = function(e){
+    var card = e.target;
+    while(card && !card.classList.contains('stock-card') && card !== wrap){ card = card.parentElement; }
+    if(!card || card === wrap) return;
+    // ปิดการ์ดอื่น
+    wrap.querySelectorAll('.stock-actions').forEach(function(a){
+      if(a.parentElement !== card) a.style.display = 'none';
+    });
+    // toggle การ์ดที่กด
+    var actions = card.querySelector('.stock-actions');
+    if(actions) actions.style.display = actions.style.display === 'none' ? 'flex' : 'none';
+  };
 }
 
 function checkStockAlert(){
