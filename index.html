@@ -532,7 +532,7 @@ function loadHome(){
     wrap.innerHTML=window._recentRows.map(function(r,idx){
       var isInc=r.type==='income';
       var label=isInc?(r.desc+(r.customer?' · '+r.customer:'')):(r.desc);
-      return '<div class="txn" data-ridx="'+idx+'">'+'<div><div class="tn">'+label+'</div>'+'<div class="tm">'+(r.date||'')+(r.bill?' · บิล '+r.bill:'')+'</div></div>'+'<div><div class="ta '+(isInc?'inc':'exp')+'">'+(isInc?'+':'-')+fmt(isInc?r.total:r.amount)+'</div>'+'<div>'+payBadge(isInc?r.payType:r.payMethod)+'</div></div></div>';
+      return '<div class="txn" data-ridx="'+idx+'">'+'<div><div class="tn">'+label+'</div>'+'<div class="tm">'+(_fixThaiYear(r.date)||'')+(r.bill?' · บิล '+r.bill:'')+'</div></div>'+'<div><div class="ta '+(isInc?'inc':'exp')+'">'+(isInc?'+':'-')+fmt(isInc?r.total:r.amount)+'</div>'+'<div>'+payBadge(isInc?r.payType:r.payMethod)+'</div></div></div>';
     }).join('');
     wrap.onclick=function(e){ var el=e.target; while(el&&!el.dataset.ridx&&el!==wrap){el=el.parentElement;} if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);} };
   }).catch(function(){});
@@ -671,7 +671,7 @@ function renderMonthRows(){
     html += '<div class="sec-lbl" style="margin-top:10px">รายรับ ('+incRows.length+' รายการ)</div>';
     html += incRows.map(function(r){
       return '<div class="txn"><div><div class="tn">'+(r.desc||'')+(r.customer?' · '+r.customer:'')+'</div>'+
-        '<div class="tm">'+(r.date||'')+'</div></div>'+
+        '<div class="tm">'+(_fixThaiYear(r.date)||'')+'</div></div>'+
         '<div><div class="ta inc">+'+fmt(r.total)+'</div>'+payBadge(r.payType)+'</div></div>';
     }).join('');
   }
@@ -679,7 +679,7 @@ function renderMonthRows(){
     html += '<div class="sec-lbl" style="margin-top:10px">รายจ่าย ('+expRows.length+' รายการ)</div>';
     html += expRows.map(function(r){
       return '<div class="txn"><div><div class="tn">'+(r.desc||'')+'</div>'+
-        '<div class="tm">'+(r.date||'')+' · '+(r.category||'')+'</div></div>'+
+        '<div class="tm">'+(_fixThaiYear(r.date)||'')+' · '+(r.category||'')+'</div></div>'+
         '<div><div class="ta exp">-'+fmt(r.amount)+'</div></div></div>';
     }).join('');
   }
@@ -987,6 +987,19 @@ function resetExpForm(){
 
 // ===== HELPERS =====
 function fmt(n){ return (parseFloat(n)||0).toLocaleString(); }
+
+// แก้ปีที่บวก 543 ซ้ำ เช่น 3112 → 2569
+function _fixThaiYear(dateStr){
+  if(!dateStr) return dateStr;
+  var s = String(dateStr).trim();
+  var p = s.split('/');
+  if(p.length === 3){
+    var y = parseInt(p[2]);
+    if(y > 3000) p[2] = String(y - 543);
+    return p.join('/');
+  }
+  return s;
+}
 function payBadge(p){
   if(!p) return '';
   var cls=p==='เงินสด'?'b-cash':p==='โอน'?'b-transfer':'b-credit';
@@ -1106,7 +1119,7 @@ function renderListRows(){
     var label = isInc ? (r.desc+(r.customer?' · '+r.customer:'')) : r.desc;
     return '<div class="txn" data-idx="'+idx+'">'+
       '<div><div class="tn">'+label+'</div>'+
-      '<div class="tm">'+(r.date||'')+(isInc&&r.bill?' · บิล '+r.bill:'')+(isInc?'':' · '+(r.category||''))+'</div></div>'+
+      '<div class="tm">'+(_fixThaiYear(r.date)||'')+(isInc&&r.bill?' · บิล '+r.bill:'')+(isInc?'':' · '+(r.category||''))+'</div></div>'+
       '<div><div class="ta '+(isInc?'inc':'exp')+'">'+(isInc?'+':'-')+fmt(isInc?r.total:r.amount)+'</div>'+
       '<div>'+(isInc?payBadge(r.payType):'<span class="badge b-spare">'+(r.category||'')+'</span>')+'</div></div></div>';
   }).join('');
@@ -1376,7 +1389,7 @@ function getIncStockLines(){
 function showDetail(r){
   var isInc=r.type==='income';
   var rows='';
-  rows+='<div class="detail-row"><span class="detail-lbl">วันที่</span><span class="detail-val">'+r.date+'</span></div>';
+  rows+='<div class="detail-row"><span class="detail-lbl">วันที่</span><span class="detail-val">'+_fixThaiYear(r.date)+'</span></div>';
   if(r.bill) rows+='<div class="detail-row"><span class="detail-lbl">บิล</span><span class="detail-val">'+r.bill+'</span></div>';
   if(isInc){
     rows+='<div class="detail-row"><span class="detail-lbl">งาน</span><span class="detail-val">'+r.desc+'</span></div>';
