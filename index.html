@@ -117,50 +117,24 @@ body{
 
 /* Mobile — single column */
 
-  .rail{display:none}
+  
   
   
   .center-panel{display:block;width:100vw}
   .center-header{display:none}
 }
 
-/* ===== ICON RAIL ===== */
-.rail{
-  background:var(--ink);
-  display:flex;flex-direction:column;align-items:center;
-  padding:16px 0;gap:4px;overflow:hidden;
-}
 
   
 }
-.rail-logo{
-  width:38px;height:38px;background:var(--red);border-radius:9px;
-  display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-d);font-weight:900;font-size:14px;color:#fff;
-  margin-bottom:14px;flex-shrink:0;
-}
-.rail-btn{
-  width:42px;height:42px;border-radius:9px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;color:rgba(255,255,255,.35);transition:.15s;
-  border:none;background:transparent;position:relative;
-}
-.rail-btn:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.75)}
-.rail-btn.active{background:rgba(255,255,255,.11);color:#fff}
-.rail-btn i{font-size:20px}
-.rail-sep{width:26px;height:1px;background:rgba(255,255,255,.08);margin:6px 0}
-.rail-avatar{
-  width:34px;height:34px;border-radius:50%;
-  background:var(--red);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-size:13px;font-weight:600;margin-top:auto;cursor:pointer;
-  flex-shrink:0;
-}
-.stock-rail-badge{
-  position:absolute;top:6px;right:6px;
-  width:8px;height:8px;background:var(--red);border-radius:50%;
-  border:2px solid var(--ink);display:none;
-}
+
+
+
+
+
+
+
+
 
 /* ===== LEFT PANEL ===== */
 
@@ -198,48 +172,42 @@ body{
 /* stat cards ใน left panel */
 
 
-.lp-sc:hover{background:var(--cream3)}
-.lp-sc .l{font-size:10px;color:var(--ink3);margin-bottom:4px}
-.lp-sc .v{font-size:16px;font-weight:700;font-family:var(--font-d)}
-.lp-sc .s{font-size:10px;color:var(--ink4);margin-top:2px}
+
+
+
+
 .v-inc{color:var(--green-mid)}.v-exp{color:var(--red)}.v-amb{color:var(--amber)}
 
 
 
 
 
-.lp-abtn-inc:hover{opacity:.85}
-.lp-abtn-exp:hover{background:var(--cream2)}
+
+
 
 /* recent list ใน left */
 
-.sec-lbl2{font-size:10px;color:var(--ink4);font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:10px 8px 6px}
-.tx-item{
-  display:flex;align-items:center;gap:9px;padding:8px;
-  border-radius:8px;cursor:pointer;transition:.12s;
-}
-.tx-item:hover{background:var(--cream2)}
-.tx-icon{
-  width:30px;height:30px;border-radius:7px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;font-size:14px;
-}
-.tx-icon.inc{background:var(--green-l);color:var(--green)}
-.tx-icon.exp{background:var(--blue-l);color:var(--blue-dark)}
-.tx-icon.cre{background:var(--amber-l);color:var(--amber)}
-.tx-info{flex:1;min-width:0}
-.tx-name{font-size:12px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tx-time{font-size:10px;color:var(--ink4)}
-.tx-amt{font-size:12px;font-weight:600;flex-shrink:0}
-.tx-amt.inc{color:var(--green-mid)}.tx-amt.exp{color:var(--red)}.tx-amt.cre{color:var(--amber)}
+
+
+
+
+
+
+
+
+
+
+
+
 
 /* task list */
-.task-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:pointer;transition:.12s}
-.task-item:hover{background:var(--cream2)}
-.task-check{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--ink4);flex-shrink:0;display:flex;align-items:center;justify-content:center}
-.task-check.done{border-color:var(--green);background:var(--green)}
-.task-check.done::after{content:'✓';font-size:9px;color:#fff;font-weight:700}
-.task-text{font-size:12px;color:var(--ink2)}
-.task-text.done{text-decoration:line-through;color:var(--ink4)}
+
+
+
+
+
+
+
 
 /* ===== CENTER PANEL ===== */
 .center-panel{
@@ -409,32 +377,32 @@ body{
 
 
 /* summary dark card */
-.sum-card{background:var(--ink);color:#fff;border-radius:var(--r);padding:16px;margin-bottom:11px}
-.sum-date{font-size:10px;color:rgba(255,255,255,.4);margin-bottom:8px}
-.sum-row{display:flex;align-items:baseline;gap:6px;margin-bottom:4px}
-.sum-lbl{font-size:11px;color:rgba(255,255,255,.45)}
-.sum-val{font-family:var(--font-d);font-size:19px;font-weight:700}
-.sum-val.pos{color:#6ED9A8}.sum-val.neg{color:#FF8A7A}
-.sum-div{height:1px;background:rgba(255,255,255,.1);margin:10px 0}
-.sum-net-lbl{font-size:10px;color:rgba(255,255,255,.4)}
-.sum-net-val{font-family:var(--font-d);font-size:26px;font-weight:900;color:#fff;margin-top:2px}
+
+
+
+
+
+
+
+
+
 
 /* mini stat row */
-.stat-row{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px}
-.sm-stat{background:var(--cream2);border-radius:var(--r);padding:11px 12px}
-.sm-stat .sl{font-size:10px;color:var(--ink4);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px}
-.sm-stat .sv{font-family:var(--font-d);font-size:17px;font-weight:700;color:var(--ink)}
-.sm-stat .ss{font-size:10px;color:var(--ink4);margin-top:2px}
+
+
+
+
+
 
 /* credit list right */
-.cr-item{display:flex;align-items:center;gap:9px;padding:8px;border-radius:8px;cursor:pointer;border-bottom:1px solid var(--border)}
-.cr-item:last-child{border-bottom:none}
-.cr-item:hover{background:var(--cream2)}
+
+
+
 .cr-av{width:32px;height:32px;border-radius:50%;background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--ink2);flex-shrink:0}
-.cr-info{flex:1;min-width:0}
-.cr-name{font-size:12px;color:var(--ink);font-weight:500}
-.cr-plate{font-size:10px;color:var(--ink4)}
-.cr-amt{font-size:12px;font-weight:600;color:var(--red)}
+
+
+
+
 
 /* ===== BOTTOM NAV (mobile only) ===== */
 .bottomnav{
@@ -454,7 +422,7 @@ body{
 @media(min-width:900px){.toast{bottom:24px}}
 
 
-  .rail{display:none !important}
+  
   
   
   .center-panel{display:flex;flex-direction:column;width:100vw}
@@ -813,14 +781,13 @@ function setDateFields(){
   var mobSub=document.getElementById('mob-sub');
   if(mobSub) mobSub.textContent=full;
   // left panel sub
-  var lpSub=document.getElementById('lp-sub');
-  if(lpSub) lpSub.textContent=full;
+  
+  
   // center header
   var chMonth=document.getElementById('ch-month');
   if(chMonth) chMonth.textContent=full;
   // right panel date
-  var rpDate=document.getElementById('rp-date');
-  if(rpDate) rpDate.textContent=full+' · 1–'+d.getDate();
+  
   // form dates
   var id=document.getElementById('inc-date');
   var ed=document.getElementById('exp-date');
@@ -852,8 +819,7 @@ function _submitPin(){
 
 function applyRole(){
   var isOwner=currentRole==='owner';
-  // desktop rail
-  var rbSet=document.getElementById('rb-settings');
+    var rbSet=document.getElementById('rb-settings');
   if(rbSet) rbSet.style.display=isOwner?'flex':'none';
   // desktop header settings
   var dskSet=document.getElementById('dsk-settings');
@@ -867,24 +833,14 @@ function applyRole(){
   if(btnAddStock) btnAddStock.style.display=isOwner?'inline-block':'none';
   // rail avatar
   var av=document.getElementById('rail-avatar');
-  if(av) av.textContent=isOwner?'👑':'ว';
+  
   // sub text
   var roleLabel=(isOwner?'👑 เจ้าของ · ':'👤 พนักงาน · ')+months[new Date().getMonth()]+' '+(new Date().getFullYear()+543);
-  ['mob-sub','lp-sub'].forEach(function(id){var el=document.getElementById(id);if(el) el.textContent=roleLabel;});
+  if(el) el.textContent=roleLabel;});
 }
 
-function showApp(){
-  var app=document.getElementById('app-wrap');
-  if(app) app.style.display='';
-}
+function showApp(){var app=document.getElementById('app-wrap');if(app)app.style.display='';}
 
-// resize handler
-window.addEventListener('resize', function(){
-  if(document.getElementById('app-wrap').style.display === 'none') return;
-  var isDesktop = window.innerWidth >= 900;
-  var rail = document.getElementById('rail-nav');
-  if(rail)  rail.style.display  = isDesktop ? 'flex'  : 'none';
-});
 
 function doLogout(){
   currentRole=null;_pinBuf='';_updatePinDots();
@@ -920,10 +876,7 @@ function nav(name){
   if(name==='stock'){filterStock();checkStockAlert();}
   if(name==='inc'){incStockLines=[];document.getElementById('stock-items-wrap').innerHTML='';}
 }
-
-function setRail(name){
-  // desktop rail
-  document.querySelectorAll('.rail-btn').forEach(function(b){b.classList.remove('active');});
+);
   var rb=document.getElementById('rb-'+name);
   if(rb) rb.classList.add('active');
   // mobile bottom nav
@@ -948,22 +901,16 @@ function loadHome(){
     if(sc) sc.textContent=fmt(res.credit);
     if(sj) sj.textContent=res.jobs+' คิว';
     // left panel
-    ['lp-inc','lp-exp','lp-profit','lp-credit'].forEach(function(id,i){
-      var vals=[res.income,res.expense,res.profit,res.credit];
+    
       var el=document.getElementById(id);
       if(el) el.textContent=fmt(vals[i]);
     });
     // right panel
-    var ri=document.getElementById('rp-inc');
-    var re=document.getElementById('rp-exp');
-    var rpr=document.getElementById('rp-profit');
-    var rj=document.getElementById('rp-jobs');
-    var rcr=document.getElementById('rp-credit');
-    if(ri) ri.textContent='฿'+fmt(res.income);
-    if(re) re.textContent='฿'+fmt(res.expense);
-    if(rpr) rpr.textContent='฿'+fmt(res.profit);
-    if(rj) rj.textContent=res.jobs;
-    if(rcr) rcr.textContent=fmt(res.credit);
+    
+    
+    
+    
+    
   }).catch(function(){});
 
   gasGet('getRecentRows',{n:8}).then(function(res){
@@ -980,12 +927,7 @@ function loadHome(){
       wrap.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==wrap){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
     }
     // left panel recent
-    var lpRecent=document.getElementById('lp-recent');
-    if(lpRecent){
-      lpRecent.innerHTML=window._recentRows.slice(0,5).map(function(r,idx){
-        var isInc=r.type==='income';
-        return '<div class="tx-item" data-ridx="'+idx+'"><div class="tx-icon '+(isInc?'inc':'exp')+'"><i class="ti '+(isInc?'ti-arrow-down-left':'ti-arrow-up-right')+'"></i></div><div class="tx-info"><div class="tx-name">'+(r.desc||'')+(isInc&&r.customer?' · '+r.customer:'')+'</div><div class="tx-time">'+(_fixThaiYear(r.date)||'')+'</div></div><div class="tx-amt '+(isInc?'inc':'exp')+'">'+(isInc?'+':'-')+fmt(isInc?r.total:r.amount)+'</div></div>';
-      }).join('');
+    ).join('');
       lpRecent.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==lpRecent){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
     }
   }).catch(function(){});
@@ -993,19 +935,14 @@ function loadHome(){
   gasGet('getCreditList').then(function(res){
     renderCredit(res);
     // right panel credit count + list
-    var cnt=document.getElementById('rp-credit-cnt');
-    var rpList=document.getElementById('rp-credit-list');
     if(!res.ok){
-      if(cnt) cnt.textContent='—';
+      
       if(rpList) rpList.innerHTML='';
       return;
     }
     var pending=res.rows.filter(function(r){return r.status==='ค้างชำระ';});
-    if(cnt) cnt.textContent=pending.length;
-    if(rpList){
-      if(!pending.length){
-        rpList.innerHTML='<p style="font-size:11px;color:var(--green);text-align:center;padding:10px">✅ ไม่มีค้างชำระ</p>';
-      } else {
+    
+     else {
         rpList.innerHTML=pending.slice(0,4).map(function(r){
           var init=(r.customer||'?').substring(0,2);
           return '<div class="cr-item"><div class="cr-av">'+init+'</div><div class="cr-info"><div class="cr-name">'+r.customer+'</div><div class="cr-plate">บิล '+(r.bill||'—')+' · ครบ '+r.dueDate+'</div></div><div class="cr-amt">฿'+fmt(r.amount)+'</div></div>';
@@ -1021,8 +958,7 @@ function loadHome(){
       stockCache=res.items||[];
       checkStockAlert();rebuildStockSelect();renderStockList();
       var low=stockCache.filter(function(s){return s.qty<=(s.minQty||0)&&s.minQty>0;});
-      var el=document.getElementById('rp-stock-low');
-      if(el) el.textContent=low.length;
+      
     }
   }).catch(function(){});
 }
