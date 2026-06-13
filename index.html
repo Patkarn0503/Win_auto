@@ -82,7 +82,7 @@ body{
 .pin-dots{display:flex;gap:14px;margin:24px 0 32px}
 .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);background:var(--cream2);transition:.15s}
 .pin-dot.filled{background:var(--ink);border-color:var(--ink)}
-.pin-grid{display:grid;grid-template-columns:1fr;gap:10px;width:240px}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px}
 .pin-key{
   height:60px;border-radius:var(--r);border:1px solid var(--border);
   background:var(--paper);font-size:20px;font-family:var(--font-d);
@@ -115,19 +115,6 @@ body{
   .center-scroll{padding-bottom:24px !important}
 }
 
-/* Mobile — single column */
-
-  
-  
-  
-  .center-panel{display:block;width:100vw}
-  .center-header{display:none}
-}
-
-
-  
-}
-
 
 
 
@@ -148,26 +135,6 @@ body{
 }
 .icon-sm:hover{background:var(--cream2);color:var(--ink)}
 .icon-sm i{font-size:14px}
-
-/* mini calendar */
-.mini-cal{padding:14px 16px 10px;flex-shrink:0}
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.cal-mon{font-size:13px;font-weight:600;color:var(--ink)}
-.cal-arr{border:none;background:transparent;cursor:pointer;color:var(--ink3);padding:2px 5px;font-size:14px}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
-.cal-dow{font-size:10px;color:var(--ink4);padding:3px 0;font-weight:500}
-.cal-day{
-  font-size:12px;padding:5px 2px;border-radius:6px;cursor:pointer;
-  color:var(--ink2);transition:.1s;line-height:1;
-}
-.cal-day:hover{background:var(--cream2)}
-.cal-day.other{color:var(--ink4)}
-.cal-day.today{background:var(--ink);color:#fff;font-weight:600}
-.cal-day.has-dot{position:relative}
-.cal-day.has-dot::after{
-  content:'';width:4px;height:4px;background:var(--green);
-  border-radius:50%;position:absolute;bottom:1px;left:50%;transform:translateX(-50%);
-}
 
 /* stat cards ใน left panel */
 
@@ -421,15 +388,6 @@ body{
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:11px;padding:8px 18px;border-radius:20px;display:none;z-index:300;white-space:nowrap}
 @media(min-width:900px){.toast{bottom:24px}}
 
-
-  
-  
-  
-  .center-panel{display:flex;flex-direction:column;width:100vw}
-  .center-header{display:none !important}
-  .center-scroll{padding:0 14px 80px !important}
-}
-
 @media(max-width:899px){
   .center-panel{display:flex;flex-direction:column;width:100vw}
   .center-header{display:none}
@@ -486,7 +444,7 @@ body{
         <div class="tnm-sub" id="mob-sub"></div>
       </div>
       <div style="display:flex;align-items:center;gap:7px">
-        <span class="ver-tag">v0.5.0</span>
+        <span class="ver-tag">v0.5.1</span>
         <button id="btn-settings" onclick="nav('settings')" style="display:none;background:none;border:none;font-size:18px;cursor:pointer;padding:2px">⚙️</button>
         <button onclick="doLogout()" style="background:none;border:none;font-size:11px;color:var(--ink3);cursor:pointer;font-family:var(--font)">ออก</button>
       </div>
@@ -499,7 +457,7 @@ body{
         <div class="ch-page" id="ch-page">หน้าหลัก</div>
       </div>
       <div class="ch-actions">
-        <span class="ver-tag">v0.5.0</span>
+        <span class="ver-tag">v0.5.1</span>
         <button class="icon-sm" id="dsk-settings" onclick="nav('settings')" style="display:none"><i class="ti ti-settings"></i></button>
         <button class="icon-sm" onclick="doLogout()" title="ออก"><i class="ti ti-logout"></i></button>
         <button class="btn-share" onclick="nav('inc')"><i class="ti ti-plus" style="font-size:13px"></i> รายรับ</button>
@@ -780,25 +738,14 @@ function setDateFields(){
   // mobile sub
   var mobSub=document.getElementById('mob-sub');
   if(mobSub) mobSub.textContent=full;
-  // left panel sub
-  
-  
   // center header
   var chMonth=document.getElementById('ch-month');
   if(chMonth) chMonth.textContent=full;
-  // right panel date
-  
   // form dates
   var id=document.getElementById('inc-date');
   var ed=document.getElementById('exp-date');
   if(id) id.value=short;
   if(ed) ed.value=short;
-}
-
-  var total=first+daysInMonth;
-  var next=1;
-  while(total%7!==0){html+='<div class="cal-day other">'+(next++)+'</div>';total++;}
-  grid.innerHTML=html;
 }
 
 // ===== PIN =====
@@ -831,12 +778,6 @@ function applyRole(){
   if(btnRpt) btnRpt.style.display=isOwner?'flex':'none';
   var btnAddStock=document.getElementById('btn-add-stock');
   if(btnAddStock) btnAddStock.style.display=isOwner?'inline-block':'none';
-  // rail avatar
-  var av=document.getElementById('rail-avatar');
-  
-  // sub text
-  var roleLabel=(isOwner?'👑 เจ้าของ · ':'👤 พนักงาน · ')+months[new Date().getMonth()]+' '+(new Date().getFullYear()+543);
-  if(el) el.textContent=roleLabel;});
 }
 
 function showApp(){var app=document.getElementById('app-wrap');if(app)app.style.display='';}
@@ -876,14 +817,6 @@ function nav(name){
   if(name==='stock'){filterStock();checkStockAlert();}
   if(name==='inc'){incStockLines=[];document.getElementById('stock-items-wrap').innerHTML='';}
 }
-);
-  var rb=document.getElementById('rb-'+name);
-  if(rb) rb.classList.add('active');
-  // mobile bottom nav
-  document.querySelectorAll('.bn-btn').forEach(function(b){b.classList.remove('active');});
-  var bn=document.getElementById('bn-'+name);
-  if(bn) bn.classList.add('active');
-}
 
 // ===== LOAD HOME =====
 function loadHome(){
@@ -900,17 +833,6 @@ function loadHome(){
     if(sp) sp.textContent=fmt(res.profit);
     if(sc) sc.textContent=fmt(res.credit);
     if(sj) sj.textContent=res.jobs+' คิว';
-    // left panel
-    
-      var el=document.getElementById(id);
-      if(el) el.textContent=fmt(vals[i]);
-    });
-    // right panel
-    
-    
-    
-    
-    
   }).catch(function(){});
 
   gasGet('getRecentRows',{n:8}).then(function(res){
@@ -926,29 +848,10 @@ function loadHome(){
       }).join('');
       wrap.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==wrap){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
     }
-    // left panel recent
-    ).join('');
-      lpRecent.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==lpRecent){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
-    }
   }).catch(function(){});
 
   gasGet('getCreditList').then(function(res){
     renderCredit(res);
-    // right panel credit count + list
-    if(!res.ok){
-      
-      if(rpList) rpList.innerHTML='';
-      return;
-    }
-    var pending=res.rows.filter(function(r){return r.status==='ค้างชำระ';});
-    
-     else {
-        rpList.innerHTML=pending.slice(0,4).map(function(r){
-          var init=(r.customer||'?').substring(0,2);
-          return '<div class="cr-item"><div class="cr-av">'+init+'</div><div class="cr-info"><div class="cr-name">'+r.customer+'</div><div class="cr-plate">บิล '+(r.bill||'—')+' · ครบ '+r.dueDate+'</div></div><div class="cr-amt">฿'+fmt(r.amount)+'</div></div>';
-        }).join('');
-      }
-    }
   }).catch(function(){});
 
   gasGet('getMonthlySummary').then(renderReport).catch(function(){});
