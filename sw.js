@@ -1,4 +1,4 @@
-var CACHE = 'win-auto-v12';
+var CACHE = 'win-auto-v13';
 var FILES = ['./manifest.json'];
 
 self.addEventListener('install', function(e){
