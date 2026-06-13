@@ -215,6 +215,12 @@ html,body{
       <div class="fg"><label>ชื่อลูกค้า</label><input type="text" placeholder="เช่น คุณสมชาย / Toyota Vios ทะเบียน กข-1234" id="inc-customer"></div>
       <div class="fg"><label>ค่าบริการ (฿)</label><input type="number" placeholder="0" id="inc-svc" oninput="calcTotal()" min="0"></div>
       <div class="fg"><label>ค่าอะไหล่ (฿)</label><input type="number" placeholder="0" id="inc-part" oninput="calcTotal()" min="0"></div>
+      <!-- section สต็อก — อยู่ใกล้ค่าอะไหล่ -->
+      <div class="fg">
+        <label>สินค้า/อะไหล่ที่ใช้ (ไม่บังคับ)</label>
+        <div id="stock-items-wrap"></div>
+        <button type="button" onclick="addStockLine()" style="width:100%;padding:9px;border:1px dashed var(--border2);border-radius:8px;background:none;font-size:12px;font-family:var(--font);color:var(--text2);cursor:pointer;margin-top:4px">+ เพิ่มสินค้า</button>
+      </div>
       <div class="fg"><label>ยอดรวม</label><div class="total-disp" id="inc-total">0 บาท</div></div>
       <div class="fg"><label>ช่องทางรับเงิน</label>
         <div class="pay-row">
@@ -240,12 +246,6 @@ html,body{
         </div>
       </div>
       <div class="fg"><label>หมายเหตุ</label><textarea placeholder="ไม่บังคับ" id="inc-note"></textarea></div>
-      <!-- section สต็อก -->
-      <div class="fg">
-        <label>สินค้า/อะไหล่ที่ใช้ (ไม่บังคับ)</label>
-        <div id="stock-items-wrap"></div>
-        <button type="button" onclick="addStockLine()" style="width:100%;padding:9px;border:1px dashed var(--border2);border-radius:8px;background:none;font-size:12px;font-family:var(--font);color:var(--text2);cursor:pointer;margin-top:4px">+ เพิ่มสินค้า</button>
-      </div>
       <button class="btn-save-inc" id="btn-save-inc" onclick="saveInc()">💾 บันทึกรายรับ</button>
       <button class="btn-cancel" onclick="nav('home')">ยกเลิก</button>
     </div>
