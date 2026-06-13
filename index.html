@@ -82,7 +82,7 @@ body{
 .pin-dots{display:flex;gap:14px;margin:24px 0 32px}
 .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);background:var(--cream2);transition:.15s}
 .pin-dot.filled{background:var(--ink);border-color:var(--ink)}
-.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px}
+.pin-grid{display:grid;grid-template-columns:1fr;gap:10px;width:240px}
 .pin-key{
   height:60px;border-radius:var(--r);border:1px solid var(--border);
   background:var(--paper);font-size:20px;font-family:var(--font-d);
@@ -101,15 +101,12 @@ body{
 @media(min-width:900px){
   #app-wrap{
     display:grid;
-    grid-template-columns:64px 280px 1fr 300px;
+    grid-template-columns:1fr;
     grid-template-rows:100vh;
     height:100vh;
     overflow:hidden;
   }
-  .rail        {grid-column:1;grid-row:1}
-  .left-panel  {grid-column:2;grid-row:1}
-  .center-panel{grid-column:3;grid-row:1}
-  .right-panel {grid-column:4;grid-row:1}
+  
   /* ซ่อน bottom nav บน desktop */
   .bottomnav{display:none !important}
   /* ซ่อน topnav บน desktop */
@@ -121,8 +118,8 @@ body{
 /* Mobile — single column */
 
   .rail{display:none}
-  .left-panel{display:none}
-  .right-panel{display:none}
+  
+  
   .center-panel{display:block;width:100vw}
   .center-header{display:none}
 }
@@ -134,7 +131,7 @@ body{
   padding:16px 0;gap:4px;overflow:hidden;
 }
 
-  .right-panel{display:none !important}
+  
 }
 .rail-logo{
   width:38px;height:38px;background:var(--red);border-radius:9px;
@@ -166,17 +163,10 @@ body{
 }
 
 /* ===== LEFT PANEL ===== */
-.left-panel{
-  background:var(--paper);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;overflow:hidden;
-}
-.lp-head{
-  padding:16px 16px 13px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--border);flex-shrink:0;
-}
-.lp-title{font-size:15px;font-weight:600;color:var(--ink)}
-.lp-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+
+
+
+
 .icon-sm{
   width:28px;height:28px;border:1px solid var(--border);border-radius:6px;
   background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;
@@ -206,36 +196,23 @@ body{
 }
 
 /* stat cards ใน left panel */
-.lp-stats{
-  display:grid;grid-template-columns:1fr 1fr;gap:6px;
-  padding:12px 16px;border-bottom:1px solid var(--border);flex-shrink:0;
-}
-.lp-sc{
-  background:var(--cream2);border-radius:var(--r);padding:10px 11px;cursor:pointer;
-  transition:.12s;
-}
+
+
 .lp-sc:hover{background:var(--cream3)}
 .lp-sc .l{font-size:10px;color:var(--ink3);margin-bottom:4px}
 .lp-sc .v{font-size:16px;font-weight:700;font-family:var(--font-d)}
 .lp-sc .s{font-size:10px;color:var(--ink4);margin-top:2px}
 .v-inc{color:var(--green-mid)}.v-exp{color:var(--red)}.v-amb{color:var(--amber)}
 
-.lp-btn-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:6px;
-  padding:10px 16px;border-bottom:1px solid var(--border);flex-shrink:0;
-}
-.lp-abtn{
-  border-radius:8px;padding:10px 6px;border:none;font-size:12px;font-weight:500;
-  display:flex;align-items:center;gap:5px;justify-content:center;
-  cursor:pointer;font-family:var(--font);
-}
-.lp-abtn-inc{background:var(--ink);color:#fff}
-.lp-abtn-exp{background:transparent;border:1px solid var(--border2);color:var(--ink2)}
+
+
+
+
 .lp-abtn-inc:hover{opacity:.85}
 .lp-abtn-exp:hover{background:var(--cream2)}
 
 /* recent list ใน left */
-.lp-scroll{overflow-y:auto;flex:1;padding:0 8px 8px}
+
 .sec-lbl2{font-size:10px;color:var(--ink4);font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:10px 8px 6px}
 .tx-item{
   display:flex;align-items:center;gap:9px;padding:8px;
@@ -374,9 +351,9 @@ body{
 .rz{border:1.5px dashed var(--border2);border-radius:7px;padding:14px;text-align:center;cursor:pointer;background:var(--paper)}
 .rz-ic{font-size:20px;color:var(--ink3);margin-bottom:5px}
 .rz-txt{font-size:10px;color:var(--ink3)}
-.rp-wrap{display:none;text-align:center;margin-top:6px}
+
 .rp-wrap img{max-width:100%;max-height:120px;border-radius:7px;border:1px solid var(--border)}
-.rp-del{font-size:10px;color:var(--red);background:none;border:none;cursor:pointer;font-family:var(--font);margin-top:5px;display:block;width:100%;text-align:center}
+
 
 .btn-save-inc{width:100%;padding:13px;border-radius:var(--r);background:var(--ink);border:none;color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:5px;margin-top:6px}
 .btn-save-exp{width:100%;padding:13px;border-radius:var(--r);background:var(--red);border:none;color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:5px;margin-top:6px}
@@ -426,17 +403,10 @@ body{
 .overlay-btns{display:flex;gap:8px;justify-content:center}
 
 /* ===== RIGHT PANEL ===== */
-.right-panel{
-  background:var(--paper);border-left:1px solid var(--border);
-  display:flex;flex-direction:column;overflow:hidden;
-}
-.rp-head{
-  padding:16px 16px 13px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-bottom:1px solid var(--border);flex-shrink:0;
-}
-.rp-title{font-size:15px;font-weight:600;color:var(--ink)}
-.rp-scroll{overflow-y:auto;flex:1;padding:14px}
+
+
+
+
 
 /* summary dark card */
 .sum-card{background:var(--ink);color:#fff;border-radius:var(--r);padding:16px;margin-bottom:11px}
@@ -485,8 +455,8 @@ body{
 
 
   .rail{display:none !important}
-  .left-panel{display:none !important}
-  .right-panel{display:none !important}
+  
+  
   .center-panel{display:flex;flex-direction:column;width:100vw}
   .center-header{display:none !important}
   .center-scroll{padding:0 14px 80px !important}
@@ -537,55 +507,6 @@ body{
 
 <!-- APP WRAP -->
 <div id="app-wrap">
-
-  <!-- ICON RAIL (desktop) -->
-  <nav class="rail" id="rail-nav" style="display:none">
-    <div class="rail-logo">W</div>
-    <button class="rail-btn active" id="rb-home"   onclick="nav('home')"   title="หน้าหลัก"><i class="ti ti-home"></i></button>
-    <button class="rail-btn"        id="rb-list"   onclick="nav('list')"   title="รายการ"><i class="ti ti-list"></i></button>
-    <button class="rail-btn"        id="rb-stock"  onclick="nav('stock')" title="สต็อก" style="position:relative"><i class="ti ti-package"></i><span class="stock-rail-badge" id="stock-rail-badge"></span></button>
-    <button class="rail-btn"        id="rb-report" onclick="nav('report')" title="รายงาน"><i class="ti ti-chart-bar"></i></button>
-    <div class="rail-sep"></div>
-    <button class="rail-btn" id="rb-settings" onclick="nav('settings')" title="ตั้งค่า" style="display:none"><i class="ti ti-settings"></i></button>
-    <button class="rail-btn" onclick="doLogout()" title="ออกจากระบบ"><i class="ti ti-logout"></i></button>
-    <div class="rail-avatar" id="rail-avatar">ว</div>
-  </nav>
-
-  <!-- LEFT PANEL (desktop) -->
-  <aside class="left-panel" id="left-panel" style="display:none">
-    <div class="lp-head">
-      <div>
-        <div class="lp-title">Win Auto Service</div>
-        <div class="lp-sub" id="lp-sub"></div>
-      </div>
-      <button class="icon-sm"><i class="ti ti-search"></i></button>
-    </div>
-    <!-- stat ย่อ -->
-    <div class="lp-stats">
-      <div class="lp-sc" onclick="navToListMonth('income')"><div class="l">รายรับ</div><div class="v v-inc" id="lp-inc">—</div></div>
-      <div class="lp-sc" onclick="navToListMonth('expense')"><div class="l">รายจ่าย</div><div class="v v-exp" id="lp-exp">—</div></div>
-      <div class="lp-sc" onclick="navToListMonth('all')"><div class="l">กำไร</div><div class="v v-inc" id="lp-profit">—</div></div>
-      <div class="lp-sc" onclick="nav('credit')"><div class="l">ค้างรับ</div><div class="v v-amb" id="lp-credit">—</div></div>
-    </div>
-
-    <!-- ปุ่มบันทึก -->
-    <div class="lp-btn-row">
-      <button class="lp-abtn lp-abtn-inc" onclick="nav('inc')">+ รายรับ</button>
-      <button class="lp-abtn lp-abtn-exp" onclick="nav('exp')">− รายจ่าย</button>
-    </div>
-
-    <!-- รายการล่าสุด -->
-    <div class="lp-scroll">
-      <div class="sec-lbl2">รายการล่าสุด</div>
-      <div id="lp-recent"></div>
-      <div class="sec-lbl2" style="margin-top:8px">งานค้าง</div>
-      <div id="lp-tasks">
-        <div class="task-item"><div class="task-check"></div><span class="task-text">สั่งซื้อวัสดุสิ้นเปลือง</span></div>
-        <div class="task-item"><div class="task-check"></div><span class="task-text">ตรวจนับสต็อกน้ำมัน</span></div>
-        <div class="task-item"><div class="task-check done"></div><span class="task-text done">ส่งใบแจ้งหนี้เดือนก่อน</span></div>
-      </div>
-    </div>
-  </aside>
 
   <!-- CENTER PANEL -->
   <main class="center-panel">
@@ -824,37 +745,6 @@ body{
     </div><!-- /center-scroll -->
   </main>
 
-  <!-- RIGHT PANEL (desktop) -->
-  <aside class="right-panel" id="right-panel" style="display:none">
-    <div class="rp-head">
-      <span class="rp-title">สรุปเดือนนี้</span>
-      <div style="display:flex;gap:4px">
-        <button class="icon-sm"><i class="ti ti-refresh"></i></button>
-      </div>
-    </div>
-    <div class="rp-scroll">
-      <!-- summary dark card -->
-      <div class="sum-card">
-        <div class="sum-date" id="rp-date"></div>
-        <div class="sum-row"><span class="sum-lbl">รายรับ</span><span class="sum-val pos" id="rp-inc">—</span></div>
-        <div class="sum-row"><span class="sum-lbl">รายจ่าย</span><span class="sum-val neg" id="rp-exp">—</span></div>
-        <div class="sum-div"></div>
-        <div class="sum-net-lbl">คงเหลือสุทธิ</div>
-        <div class="sum-net-val" id="rp-profit">—</div>
-      </div>
-      <!-- mini stats -->
-      <div class="stat-row">
-        <div class="sm-stat"><div class="sl">งานวันนี้</div><div class="sv" id="rp-jobs">—</div><div class="ss">คิว</div></div>
-        <div class="sm-stat"><div class="sl">เครดิตค้าง</div><div class="sv" id="rp-credit-cnt">—</div><div class="ss">ราย</div></div>
-        <div class="sm-stat"><div class="sl">สต็อกต่ำ</div><div class="sv" id="rp-stock-low">—</div><div class="ss">รายการ</div></div>
-        <div class="sm-stat"><div class="sl">ค้างรับ</div><div class="sv v-amb" id="rp-credit">—</div><div class="ss">บาท</div></div>
-      </div>
-      <!-- credit list -->
-      <div class="sec-lbl2">เครดิตลูกค้า</div>
-      <div id="rp-credit-list"><p style="font-size:11px;color:var(--ink3);text-align:center;padding:10px">กำลังโหลด...</p></div>
-    </div>
-  </aside>
-
   <!-- BOTTOM NAV (mobile) -->
   <div class="bottomnav">
     <button class="bn-btn active" id="bn-home" onclick="nav('home')"><span class="bn-ic">🏠</span>หน้าหลัก</button>
@@ -986,14 +876,6 @@ function applyRole(){
 function showApp(){
   var app=document.getElementById('app-wrap');
   if(app) app.style.display='';
-  // เปิด desktop panels เฉพาะจอใหญ่
-  var isDesktop = window.innerWidth >= 900;
-  var rail = document.getElementById('rail-nav');
-  var left = document.getElementById('left-panel');
-  var right = document.getElementById('right-panel');
-  if(rail)  rail.style.display  = isDesktop ? 'flex'  : 'none';
-  if(left)  left.style.display  = isDesktop ? 'flex'  : 'none';
-  if(right) right.style.display = isDesktop ? 'flex'  : 'none';
 }
 
 // resize handler
@@ -1001,11 +883,7 @@ window.addEventListener('resize', function(){
   if(document.getElementById('app-wrap').style.display === 'none') return;
   var isDesktop = window.innerWidth >= 900;
   var rail = document.getElementById('rail-nav');
-  var left = document.getElementById('left-panel');
-  var right = document.getElementById('right-panel');
   if(rail)  rail.style.display  = isDesktop ? 'flex'  : 'none';
-  if(left)  left.style.display  = isDesktop ? 'flex'  : 'none';
-  if(right) right.style.display = isDesktop ? 'flex'  : 'none';
 });
 
 function doLogout(){
