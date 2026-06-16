@@ -82,7 +82,7 @@ body{
 .pin-dots{display:flex;gap:14px;margin:24px 0 32px}
 .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);background:var(--cream2);transition:.15s}
 .pin-dot.filled{background:var(--ink);border-color:var(--ink)}
-.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px}
+.pin-grid{display:grid;grid-template-columns:1fr;gap:10px;width:240px}
 .pin-key{
   height:60px;border-radius:var(--r);border:1px solid var(--border);
   background:var(--paper);font-size:20px;font-family:var(--font-d);
@@ -97,16 +97,11 @@ body{
 /* ===== APP LAYOUT ===== */
 #app-wrap{display:none}
 
-/* Mobile — single column */
-@media(max-width:899px){
-  #app-wrap{display:block}
-}
-
-/* Desktop — rail + center */
+/* Desktop — 3 column */
 @media(min-width:900px){
   #app-wrap{
     display:grid;
-    grid-template-columns:60px 1fr;
+    grid-template-columns:1fr;
     grid-template-rows:100vh;
     height:100vh;
     overflow:hidden;
@@ -120,38 +115,17 @@ body{
   .center-scroll{padding-bottom:24px !important}
 }
 
-/* ===== LEFT RAIL (desktop only) ===== */
-.left-rail{
-  display:none;
-  background:var(--ink);
-  flex-direction:column;align-items:center;
-  padding:14px 0;gap:8px;
-  height:100vh;overflow:hidden;
+/* Mobile — single column */
+
+  
+  
+  
+  .center-panel{display:block;width:100vw}
+  .center-header{display:none}
 }
-@media(min-width:900px){
-  .left-rail{display:flex}
-}
-.rail-logo{
-  width:36px;height:36px;border-radius:9px;
-  background:var(--red);color:#fff;
-  display:flex;align-items:center;justify-content:center;
-  font-size:18px;font-weight:700;font-family:var(--font-d);
-  margin-bottom:10px;
-}
-.rail-btn{
-  width:40px;height:40px;border-radius:9px;border:none;
-  background:transparent;color:rgba(255,255,255,.55);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  font-size:16px;transition:.15s;position:relative;
-}
-.rail-btn:hover{background:rgba(255,255,255,.08);color:#fff}
-.rail-btn.active{background:rgba(255,255,255,.15);color:#fff}
-.rail-btn i{font-size:18px}
-.rail-spacer{flex:1}
-.rail-badge{
-  position:absolute;top:4px;right:4px;
-  background:var(--red);color:#fff;font-size:8px;
-  border-radius:8px;padding:1px 4px;min-width:14px;text-align:center;
+
+
+  
 }
 
 
@@ -174,6 +148,26 @@ body{
 }
 .icon-sm:hover{background:var(--cream2);color:var(--ink)}
 .icon-sm i{font-size:14px}
+
+/* mini calendar */
+.mini-cal{padding:14px 16px 10px;flex-shrink:0}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-mon{font-size:13px;font-weight:600;color:var(--ink)}
+.cal-arr{border:none;background:transparent;cursor:pointer;color:var(--ink3);padding:2px 5px;font-size:14px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal-dow{font-size:10px;color:var(--ink4);padding:3px 0;font-weight:500}
+.cal-day{
+  font-size:12px;padding:5px 2px;border-radius:6px;cursor:pointer;
+  color:var(--ink2);transition:.1s;line-height:1;
+}
+.cal-day:hover{background:var(--cream2)}
+.cal-day.other{color:var(--ink4)}
+.cal-day.today{background:var(--ink);color:#fff;font-weight:600}
+.cal-day.has-dot{position:relative}
+.cal-day.has-dot::after{
+  content:'';width:4px;height:4px;background:var(--green);
+  border-radius:50%;position:absolute;bottom:1px;left:50%;transform:translateX(-50%);
+}
 
 /* stat cards ใน left panel */
 
@@ -427,12 +421,22 @@ body{
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:11px;padding:8px 18px;border-radius:20px;display:none;z-index:300;white-space:nowrap}
 @media(min-width:900px){.toast{bottom:24px}}
 
+
+  
+  
+  
+  .center-panel{display:flex;flex-direction:column;width:100vw}
+  .center-header{display:none !important}
+  .center-scroll{padding:0 14px 80px !important}
+}
+
 @media(max-width:899px){
   .center-panel{display:flex;flex-direction:column;width:100vw}
   .center-header{display:none}
   .center-scroll{padding:0 14px 80px}
 }
 </style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -473,18 +477,6 @@ body{
 <!-- APP WRAP -->
 <div id="app-wrap">
 
-  <!-- LEFT RAIL (desktop only) -->
-  <aside class="left-rail">
-    <div class="rail-logo">W</div>
-    <button class="rail-btn active" id="rb-home" onclick="nav('home')" title="หน้าหลัก"><i class="ti ti-home"></i></button>
-    <button class="rail-btn" id="rb-list" onclick="nav('list')" title="รายการ"><i class="ti ti-list"></i></button>
-    <button class="rail-btn" id="rb-stock" onclick="nav('stock')" title="สต็อก"><i class="ti ti-package"></i><span class="rail-badge" id="stock-rail-badge" style="display:none">!</span></button>
-    <button class="rail-btn" id="rb-report" onclick="nav('report')" title="รายงาน"><i class="ti ti-chart-bar"></i></button>
-    <div class="rail-spacer"></div>
-    <button class="rail-btn" id="rb-settings" onclick="nav('settings')" title="ตั้งค่า" style="display:none"><i class="ti ti-settings"></i></button>
-    <button class="rail-btn" onclick="doLogout()" title="ออกจากระบบ"><i class="ti ti-logout"></i></button>
-  </aside>
-
   <!-- CENTER PANEL -->
   <main class="center-panel">
 
@@ -495,7 +487,7 @@ body{
         <div class="tnm-sub" id="mob-sub"></div>
       </div>
       <div style="display:flex;align-items:center;gap:7px">
-        <span class="ver-tag">v0.5.2</span>
+        <span class="ver-tag">v0.5.0</span>
         <button id="btn-settings" onclick="nav('settings')" style="display:none;background:none;border:none;font-size:18px;cursor:pointer;padding:2px">⚙️</button>
         <button onclick="doLogout()" style="background:none;border:none;font-size:11px;color:var(--ink3);cursor:pointer;font-family:var(--font)">ออก</button>
       </div>
@@ -508,7 +500,7 @@ body{
         <div class="ch-page" id="ch-page">หน้าหลัก</div>
       </div>
       <div class="ch-actions">
-        <span class="ver-tag">v0.5.2</span>
+        <span class="ver-tag">v0.5.0</span>
         <button class="icon-sm" id="dsk-settings" onclick="nav('settings')" style="display:none"><i class="ti ti-settings"></i></button>
         <button class="icon-sm" onclick="doLogout()" title="ออก"><i class="ti ti-logout"></i></button>
         <button class="btn-share" onclick="nav('inc')"><i class="ti ti-plus" style="font-size:13px"></i> รายรับ</button>
@@ -749,6 +741,7 @@ var GAS_URL='https://script.google.com/macros/s/AKfycbzxbSuKwkkS_vQOt2Hq1ijULGll
 
 // ===== STATE =====
 var currentRole=null;
+var _driveToken=null; // Google Drive access token
 var payMode='cash',catMode='spare',catLabel='ค่าอะไหล่/วัสดุ';
 var receiptFile=null,receiptB64=null;
 var incReceiptFile=null,incReceiptB64=null;
@@ -789,14 +782,25 @@ function setDateFields(){
   // mobile sub
   var mobSub=document.getElementById('mob-sub');
   if(mobSub) mobSub.textContent=full;
+  // left panel sub
+  
+  
   // center header
   var chMonth=document.getElementById('ch-month');
   if(chMonth) chMonth.textContent=full;
+  // right panel date
+  
   // form dates
   var id=document.getElementById('inc-date');
   var ed=document.getElementById('exp-date');
   if(id) id.value=short;
   if(ed) ed.value=short;
+}
+
+  var total=first+daysInMonth;
+  var next=1;
+  while(total%7!==0){html+='<div class="cal-day other">'+(next++)+'</div>';total++;}
+  grid.innerHTML=html;
 }
 
 // ===== PIN =====
@@ -829,6 +833,12 @@ function applyRole(){
   if(btnRpt) btnRpt.style.display=isOwner?'flex':'none';
   var btnAddStock=document.getElementById('btn-add-stock');
   if(btnAddStock) btnAddStock.style.display=isOwner?'inline-block':'none';
+  // rail avatar
+  var av=document.getElementById('rail-avatar');
+  
+  // sub text
+  var roleLabel=(isOwner?'👑 เจ้าของ · ':'👤 พนักงาน · ')+months[new Date().getMonth()]+' '+(new Date().getFullYear()+543);
+  if(el) el.textContent=roleLabel;});
 }
 
 function showApp(){var app=document.getElementById('app-wrap');if(app)app.style.display='';}
@@ -860,10 +870,6 @@ function nav(name){
   document.querySelectorAll('.bn-btn').forEach(function(b){b.classList.remove('active');});
   var bnEl=document.getElementById('bn-'+bnTarget);
   if(bnEl) bnEl.classList.add('active');
-  // sync left rail desktop
-  document.querySelectorAll('.rail-btn').forEach(function(b){b.classList.remove('active');});
-  var rbEl=document.getElementById('rb-'+bnTarget);
-  if(rbEl) rbEl.classList.add('active');
   window.scrollTo(0,0);
   // scroll center panel to top
   var cs=document.querySelector('.center-scroll');
@@ -871,6 +877,14 @@ function nav(name){
   if(name==='list') renderListPage();
   if(name==='stock'){filterStock();checkStockAlert();}
   if(name==='inc'){incStockLines=[];document.getElementById('stock-items-wrap').innerHTML='';}
+}
+);
+  var rb=document.getElementById('rb-'+name);
+  if(rb) rb.classList.add('active');
+  // mobile bottom nav
+  document.querySelectorAll('.bn-btn').forEach(function(b){b.classList.remove('active');});
+  var bn=document.getElementById('bn-'+name);
+  if(bn) bn.classList.add('active');
 }
 
 // ===== LOAD HOME =====
@@ -888,6 +902,17 @@ function loadHome(){
     if(sp) sp.textContent=fmt(res.profit);
     if(sc) sc.textContent=fmt(res.credit);
     if(sj) sj.textContent=res.jobs+' คิว';
+    // left panel
+    
+      var el=document.getElementById(id);
+      if(el) el.textContent=fmt(vals[i]);
+    });
+    // right panel
+    
+    
+    
+    
+    
   }).catch(function(){});
 
   gasGet('getRecentRows',{n:8}).then(function(res){
@@ -903,10 +928,29 @@ function loadHome(){
       }).join('');
       wrap.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==wrap){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
     }
+    // left panel recent
+    ).join('');
+      lpRecent.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==lpRecent){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
+    }
   }).catch(function(){});
 
   gasGet('getCreditList').then(function(res){
     renderCredit(res);
+    // right panel credit count + list
+    if(!res.ok){
+      
+      if(rpList) rpList.innerHTML='';
+      return;
+    }
+    var pending=res.rows.filter(function(r){return r.status==='ค้างชำระ';});
+    
+     else {
+        rpList.innerHTML=pending.slice(0,4).map(function(r){
+          var init=(r.customer||'?').substring(0,2);
+          return '<div class="cr-item"><div class="cr-av">'+init+'</div><div class="cr-info"><div class="cr-name">'+r.customer+'</div><div class="cr-plate">บิล '+(r.bill||'—')+' · ครบ '+r.dueDate+'</div></div><div class="cr-amt">฿'+fmt(r.amount)+'</div></div>';
+        }).join('');
+      }
+    }
   }).catch(function(){});
 
   gasGet('getMonthlySummary').then(renderReport).catch(function(){});
@@ -1010,8 +1054,9 @@ function saveInc(){
       else toast('❌ '+(res.error||'เกิดข้อผิดพลาด'));
     }).catch(function(){btn.disabled=false;btn.textContent='💾 บันทึกรายรับ';toast('❌ ไม่สามารถเชื่อมต่อได้');});
   }
-  if(incReceiptB64&&incReceiptFile){toast('📤 กำลังอัปโหลดหลักฐาน...');gasPost('uploadReceipt',{base64Data:incReceiptB64,filename:incReceiptFile.name,mimeType:incReceiptFile.type}).then(function(res){doSaveInc(res.ok?res.url:'');}).catch(function(){doSaveInc('');});}
-  else{doSaveInc('');}
+  if(incReceiptFile){
+    uploadToDrive(incReceiptFile, function(url){ doSaveInc(url); });
+  } else { doSaveInc(''); }
 }
 function resetIncForm(){['inc-bill','inc-desc','inc-customer','inc-svc','inc-part','inc-note','inc-due'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('inc-total').textContent='0 บาท';setPay('cash');removeIncR();}
 
@@ -1021,7 +1066,9 @@ function saveExp(){
   var amt=parseFloat(document.getElementById('exp-amt').value)||0;if(!amt){toast('⚠️ กรุณากรอกจำนวนเงิน');return;}
   var btn=document.getElementById('btn-save-exp');btn.disabled=true;btn.textContent='⏳ กำลังบันทึก...';
   function doSave(url){var data={date:document.getElementById('exp-date').value,category:catLabel,desc:desc,amount:amt,hasReceipt:!!receiptFile,receiptUrl:url||'',payMethod:'เงินสด',note:document.getElementById('exp-note').value};gasPost('appendExpense',data).then(function(res){btn.disabled=false;btn.textContent='💾 บันทึกรายจ่าย';if(res.ok){toast('✅ บันทึกเรียบร้อย (#'+res.no+')');resetExpForm();setTimeout(function(){nav('home');loadHome();},1500);}else toast('❌ '+(res.error||'เกิดข้อผิดพลาด'));}).catch(function(){btn.disabled=false;btn.textContent='💾 บันทึกรายจ่าย';toast('❌ ไม่สามารถเชื่อมต่อได้');});}
-  if(receiptB64&&receiptFile){toast('📤 กำลังอัปโหลดใบเสร็จ...');gasPost('uploadReceipt',{base64Data:receiptB64,filename:receiptFile.name,mimeType:receiptFile.type}).then(function(res){doSave(res.ok?res.url:'');}).catch(function(){doSave('');});}else{doSave('');}
+  if(receiptFile){
+    uploadToDrive(receiptFile, function(url){ doSave(url); });
+  } else { doSave(''); }
 }
 function resetExpForm(){['exp-desc','exp-amt','exp-note'].forEach(function(id){document.getElementById(id).value='';});removeR();setCat('spare','ค่าอะไหล่/วัสดุ');}
 
@@ -1091,6 +1138,59 @@ function openEdit(r){
   else{nav('exp');document.getElementById('mob-title').textContent='แก้ไขรายจ่าย';document.getElementById('ch-page').textContent='แก้ไขรายจ่าย';document.getElementById('exp-date').value=r.date||'';var catMap={'ค่าอะไหล่/วัสดุ':'spare','ค่าแรงพนักงาน':'wage','ค่าเช่า':'rent','สาธารณูปโภค':'util','ค่าใช้จ่ายอื่น ๆ':'other'};setCat(catMap[r.category]||'other',r.category||'ค่าใช้จ่ายอื่น ๆ');document.getElementById('exp-desc').value=r.desc||'';document.getElementById('exp-amt').value=r.amount||'';document.getElementById('exp-note').value=r.note||'';document.getElementById('btn-save-exp').textContent='💾 บันทึกการแก้ไข';}
 }
 function exitEditMode(){editMode=false;editRowIndex=0;editType='';document.getElementById('btn-save-inc').textContent='💾 บันทึกรายรับ';document.getElementById('btn-save-exp').textContent='💾 บันทึกรายจ่าย';}
+
+// ===== GOOGLE DRIVE UPLOAD =====
+var GDRIVE_CLIENT_ID = '243120965414-15dnkr3dmcd7j8ih0bc6bmfpov77oa8f.apps.googleusercontent.com';
+
+function _getDriveToken(callback) {
+  if(_driveToken) { callback(_driveToken); return; }
+  var client = google.accounts.oauth2.initTokenClient({
+    client_id: GDRIVE_CLIENT_ID,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    callback: function(resp) {
+      if(resp.error) { toast('❌ ไม่สามารถเข้าถึง Google Drive'); return; }
+      _driveToken = resp.access_token;
+      callback(_driveToken);
+    }
+  });
+  client.requestAccessToken({prompt: ''});
+}
+
+function uploadToDrive(file, callback) {
+  toast('📤 กำลังอัปโหลดไปยัง Drive...');
+  _getDriveToken(function(token) {
+    // Step 1: สร้างไฟล์ใน Drive
+    var metadata = {
+      name: file.name,
+      mimeType: file.type,
+      parents: [] // root Drive
+    };
+    var form = new FormData();
+    form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
+    form.append('file', file);
+
+    fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,webContentLink', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token },
+      body: form
+    }).then(function(r){ return r.json(); }).then(function(data) {
+      if(!data.id) { toast('❌ อัปโหลดไม่สำเร็จ'); callback(''); return; }
+      // Step 2: ตั้งสิทธิ์ให้ anyone with link ดูได้
+      fetch('https://www.googleapis.com/drive/v3/files/'+data.id+'/permissions', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+        body: JSON.stringify({role:'reader', type:'anyone'})
+      }).then(function() {
+        var url = 'https://drive.google.com/file/d/'+data.id+'/view';
+        toast('✅ อัปโหลดสำเร็จ');
+        callback(url);
+      });
+    }).catch(function(err) {
+      toast('❌ อัปโหลดไม่สำเร็จ');
+      callback('');
+    });
+  });
+}
 
 // ===== PWA =====
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
