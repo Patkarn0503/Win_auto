@@ -1,11 +1,9 @@
-var CACHE='win-auto-v6';
+var CACHE='win-auto-v7';
 var FILES=['./index.html','./manifest.json'];
-
 self.addEventListener('install',function(e){
   self.skipWaiting();
   e.waitUntil(caches.open(CACHE).then(function(c){return c.addAll(FILES);}));
 });
-
 self.addEventListener('activate',function(e){
   e.waitUntil(
     caches.keys().then(function(keys){
@@ -13,16 +11,13 @@ self.addEventListener('activate',function(e){
     }).then(function(){return self.clients.claim();})
   );
 });
-
 self.addEventListener('fetch',function(e){
-  // GAS: network only + offline error response (เหมือนเดิม)
-  if(e.request.url.includes('script.google.com')){
+  if(e.request.url.includes('script.google.com')||e.request.url.includes('googleapis.com')||e.request.url.includes('accounts.google.com')){
     e.respondWith(fetch(e.request).catch(function(){
       return new Response(JSON.stringify({ok:false,error:'offline'}),{headers:{'Content-Type':'application/json'}});
     }));
     return;
   }
-  // ไฟล์อื่น: Network-first — ลอง server ก่อนเสมอ, fallback ไป cache เมื่อ offline
   e.respondWith(
     fetch(e.request).then(function(res){
       var resClone=res.clone();
