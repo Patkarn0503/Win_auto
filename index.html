@@ -82,7 +82,7 @@ body{
 .pin-dots{display:flex;gap:14px;margin:24px 0 32px}
 .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);background:var(--cream2);transition:.15s}
 .pin-dot.filled{background:var(--ink);border-color:var(--ink)}
-.pin-grid{display:grid;grid-template-columns:1fr;gap:10px;width:240px}
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px}
 .pin-key{
   height:60px;border-radius:var(--r);border:1px solid var(--border);
   background:var(--paper);font-size:20px;font-family:var(--font-d);
@@ -795,12 +795,6 @@ function setDateFields(){
   if(ed) ed.value=short;
 }
 
-  var total=first+daysInMonth;
-  var next=1;
-  while(total%7!==0){html+='<div class="cal-day other">'+(next++)+'</div>';total++;}
-  grid.innerHTML=html;
-}
-
 // ===== PIN =====
 var _pinBuf='';
 function pinKey(k){if(_pinBuf.length>=4)return;_pinBuf+=k;_updatePinDots();if(_pinBuf.length===4)setTimeout(_submitPin,120);}
@@ -831,12 +825,6 @@ function applyRole(){
   if(btnRpt) btnRpt.style.display=isOwner?'flex':'none';
   var btnAddStock=document.getElementById('btn-add-stock');
   if(btnAddStock) btnAddStock.style.display=isOwner?'inline-block':'none';
-  // rail avatar
-  var av=document.getElementById('rail-avatar');
-  
-  // sub text
-  var roleLabel=(isOwner?'👑 เจ้าของ · ':'👤 พนักงาน · ')+months[new Date().getMonth()]+' '+(new Date().getFullYear()+543);
-  if(el) el.textContent=roleLabel;});
 }
 
 function showApp(){var app=document.getElementById('app-wrap');if(app)app.style.display='';}
@@ -876,14 +864,6 @@ function nav(name){
   if(name==='stock'){filterStock();checkStockAlert();}
   if(name==='inc'){incStockLines=[];document.getElementById('stock-items-wrap').innerHTML='';}
 }
-);
-  var rb=document.getElementById('rb-'+name);
-  if(rb) rb.classList.add('active');
-  // mobile bottom nav
-  document.querySelectorAll('.bn-btn').forEach(function(b){b.classList.remove('active');});
-  var bn=document.getElementById('bn-'+name);
-  if(bn) bn.classList.add('active');
-}
 
 // ===== LOAD HOME =====
 function loadHome(){
@@ -900,17 +880,6 @@ function loadHome(){
     if(sp) sp.textContent=fmt(res.profit);
     if(sc) sc.textContent=fmt(res.credit);
     if(sj) sj.textContent=res.jobs+' คิว';
-    // left panel
-    
-      var el=document.getElementById(id);
-      if(el) el.textContent=fmt(vals[i]);
-    });
-    // right panel
-    
-    
-    
-    
-    
   }).catch(function(){});
 
   gasGet('getRecentRows',{n:8}).then(function(res){
@@ -926,29 +895,10 @@ function loadHome(){
       }).join('');
       wrap.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==wrap){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
     }
-    // left panel recent
-    ).join('');
-      lpRecent.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==lpRecent){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
-    }
   }).catch(function(){});
 
   gasGet('getCreditList').then(function(res){
     renderCredit(res);
-    // right panel credit count + list
-    if(!res.ok){
-      
-      if(rpList) rpList.innerHTML='';
-      return;
-    }
-    var pending=res.rows.filter(function(r){return r.status==='ค้างชำระ';});
-    
-     else {
-        rpList.innerHTML=pending.slice(0,4).map(function(r){
-          var init=(r.customer||'?').substring(0,2);
-          return '<div class="cr-item"><div class="cr-av">'+init+'</div><div class="cr-info"><div class="cr-name">'+r.customer+'</div><div class="cr-plate">บิล '+(r.bill||'—')+' · ครบ '+r.dueDate+'</div></div><div class="cr-amt">฿'+fmt(r.amount)+'</div></div>';
-        }).join('');
-      }
-    }
   }).catch(function(){});
 
   gasGet('getMonthlySummary').then(renderReport).catch(function(){});
