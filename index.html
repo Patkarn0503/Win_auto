@@ -50,6 +50,7 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html{font-size:14px}
 
+/* ── Body: desktop = 3-col grid, mobile = single col ── */
 body{
   font-family:var(--font);
   background:var(--cream);
@@ -81,7 +82,7 @@ body{
 .pin-dots{display:flex;gap:14px;margin:24px 0 32px}
 .pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);background:var(--cream2);transition:.15s}
 .pin-dot.filled{background:var(--ink);border-color:var(--ink)}
-.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:240px}
+.pin-grid{display:grid;grid-template-columns:1fr;gap:10px;width:240px}
 .pin-key{
   height:60px;border-radius:var(--r);border:1px solid var(--border);
   background:var(--paper);font-size:20px;font-family:var(--font-d);
@@ -96,6 +97,7 @@ body{
 /* ===== APP LAYOUT ===== */
 #app-wrap{display:none}
 
+/* Desktop — 3 column */
 @media(min-width:900px){
   #app-wrap{
     display:grid;
@@ -104,16 +106,40 @@ body{
     height:100vh;
     overflow:hidden;
   }
+  
+  /* ซ่อน bottom nav บน desktop */
   .bottomnav{display:none !important}
+  /* ซ่อน topnav บน desktop */
   .topnav-mobile{display:none !important}
+  /* content area ใน center ไม่ต้อง padding-bottom สำหรับ bottomnav */
   .center-scroll{padding-bottom:24px !important}
 }
 
-@media(max-width:899px){
-  .center-panel{display:flex;flex-direction:column;width:100vw}
+/* Mobile — single column */
+
+  
+  
+  
+  .center-panel{display:block;width:100vw}
   .center-header{display:none}
-  .center-scroll{padding:0 14px 80px}
 }
+
+
+  
+}
+
+
+
+
+
+
+
+
+
+/* ===== LEFT PANEL ===== */
+
+
+
 
 .icon-sm{
   width:28px;height:28px;border:1px solid var(--border);border-radius:6px;
@@ -123,7 +149,65 @@ body{
 .icon-sm:hover{background:var(--cream2);color:var(--ink)}
 .icon-sm i{font-size:14px}
 
+/* mini calendar */
+.mini-cal{padding:14px 16px 10px;flex-shrink:0}
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cal-mon{font-size:13px;font-weight:600;color:var(--ink)}
+.cal-arr{border:none;background:transparent;cursor:pointer;color:var(--ink3);padding:2px 5px;font-size:14px}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}
+.cal-dow{font-size:10px;color:var(--ink4);padding:3px 0;font-weight:500}
+.cal-day{
+  font-size:12px;padding:5px 2px;border-radius:6px;cursor:pointer;
+  color:var(--ink2);transition:.1s;line-height:1;
+}
+.cal-day:hover{background:var(--cream2)}
+.cal-day.other{color:var(--ink4)}
+.cal-day.today{background:var(--ink);color:#fff;font-weight:600}
+.cal-day.has-dot{position:relative}
+.cal-day.has-dot::after{
+  content:'';width:4px;height:4px;background:var(--green);
+  border-radius:50%;position:absolute;bottom:1px;left:50%;transform:translateX(-50%);
+}
+
+/* stat cards ใน left panel */
+
+
+
+
+
+
 .v-inc{color:var(--green-mid)}.v-exp{color:var(--red)}.v-amb{color:var(--amber)}
+
+
+
+
+
+
+
+
+/* recent list ใน left */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* task list */
+
+
+
+
+
+
+
 
 /* ===== CENTER PANEL ===== */
 .center-panel{
@@ -149,12 +233,13 @@ body{
 
 .center-scroll{
   overflow-y:auto;flex:1;
-  padding:0 22px 80px;
+  padding:0 22px 80px; /* 80px สำหรับ bottomnav mobile */
 }
 @media(min-width:900px){
   .center-scroll{padding:0 22px 24px}
 }
 
+/* mobile topnav */
 .topnav-mobile{
   display:flex;align-items:center;justify-content:space-between;
   background:var(--paper);border-bottom:1px solid var(--border);
@@ -163,10 +248,12 @@ body{
 .tnm-title{font-size:15px;font-weight:600;color:var(--ink)}
 .tnm-sub{font-size:10px;color:var(--ink3)}
 
+/* ===== PAGES (content เหมือนเดิม แค่ re-skin) ===== */
 .page{display:none}
 .page.active{display:block}
 .content-pad{padding-top:14px}
 
+/* stat-grid home */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
 .sc{
   background:var(--paper);border:1px solid var(--border);
@@ -183,6 +270,7 @@ body{
 .abtn-exp{background:var(--red);color:#fff}
 .abtn-inc:hover,.abtn-exp:hover{opacity:.87}
 
+/* day timeline (home recent) */
 .sec-lbl{font-size:10px;color:var(--ink4);font-weight:600;letter-spacing:.05em;text-transform:uppercase;margin:12px 0 8px}
 .txn{
   display:flex;justify-content:space-between;align-items:center;
@@ -204,6 +292,7 @@ body{
 .b-rent{background:#fff0f0;color:#bb4040}
 .b-util{background:#fff8e0;color:#886600}
 
+/* forms */
 .fg{margin-bottom:10px}
 .fg label{display:block;font-size:12px;color:var(--ink2);margin-bottom:5px;font-weight:500}
 .fg input,.fg select,.fg textarea{width:100%;padding:10px 11px;border:1px solid var(--border2);border-radius:7px;font-size:13px;font-family:var(--font);color:var(--ink);background:var(--paper);outline:none;min-height:34px}
@@ -233,11 +322,13 @@ body{
 
 .rp-wrap img{max-width:100%;max-height:120px;border-radius:7px;border:1px solid var(--border)}
 
+
 .btn-save-inc{width:100%;padding:13px;border-radius:var(--r);background:var(--ink);border:none;color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:5px;margin-top:6px}
 .btn-save-exp{width:100%;padding:13px;border-radius:var(--r);background:var(--red);border:none;color:#fff;font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);display:flex;align-items:center;justify-content:center;gap:5px;margin-top:6px}
 .btn-save-inc:disabled,.btn-save-exp:disabled{opacity:.45}
 .btn-cancel{width:100%;padding:11px;border-radius:var(--r);background:var(--paper);border:1px solid var(--border2);color:var(--ink3);font-size:11px;cursor:pointer;font-family:var(--font);margin-top:8px}
 
+/* report */
 .rpt-tabs{display:flex;gap:4px;margin-bottom:10px}
 .rt{flex:1;padding:9px 5px;border-radius:var(--r);border:1px solid var(--border2);font-size:11px;text-align:center;cursor:pointer;background:var(--paper);color:var(--ink3);font-family:var(--font);transition:.12s}
 .rt.on{background:var(--ink);color:#fff;border-color:var(--ink)}
@@ -252,15 +343,18 @@ body{
 .catbar-fill{height:5px;border-radius:2px;background:var(--red)}
 .catbar-amt{font-size:10px;font-weight:500;color:var(--red);min-width:48px;text-align:right}
 
+/* credit */
 .credit-item{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:12px;margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
 .ci-name{font-size:13px;font-weight:500}
 .ci-due{font-size:10px;color:var(--ink3);margin-top:2px}
 .ci-amt{font-size:13px;font-weight:600;color:var(--amber);margin-bottom:5px;text-align:right}
 .btn-paid{background:var(--green-l);color:var(--green-dark);border:1px solid var(--green);border-radius:5px;font-size:10px;padding:6px 11px;cursor:pointer;font-family:var(--font);font-weight:500}
 
+/* stock */
 .stock-card{background:var(--paper);border:1px solid var(--border);border-radius:var(--r-lg);padding:11px 13px;margin-bottom:6px;cursor:pointer;transition:.12s}
 .stock-card:hover{background:var(--cream2)}
 
+/* list filter */
 .lf-type{padding:8px 4px;border-radius:7px;border:1px solid var(--border2);font-size:11px;font-family:var(--font);background:var(--paper);color:var(--ink3);cursor:pointer;-webkit-appearance:none;appearance:none}
 .lf-type.on{background:var(--ink);color:#fff;border-color:var(--ink);font-weight:500}
 
@@ -276,7 +370,39 @@ body{
 .overlay-box p{font-size:12px;margin-bottom:13px}
 .overlay-btns{display:flex;gap:8px;justify-content:center}
 
+/* ===== RIGHT PANEL ===== */
+
+
+
+
+
+/* summary dark card */
+
+
+
+
+
+
+
+
+
+
+/* mini stat row */
+
+
+
+
+
+
+/* credit list right */
+
+
+
 .cr-av{width:32px;height:32px;border-radius:50%;background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:var(--ink2);flex-shrink:0}
+
+
+
+
 
 /* ===== BOTTOM NAV (mobile only) ===== */
 .bottomnav{
@@ -294,8 +420,22 @@ body{
 @keyframes spin{to{transform:rotate(360deg)}}
 .toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:11px;padding:8px 18px;border-radius:20px;display:none;z-index:300;white-space:nowrap}
 @media(min-width:900px){.toast{bottom:24px}}
+
+
+  
+  
+  
+  .center-panel{display:flex;flex-direction:column;width:100vw}
+  .center-header{display:none !important}
+  .center-scroll{padding:0 14px 80px !important}
+}
+
+@media(max-width:899px){
+  .center-panel{display:flex;flex-direction:column;width:100vw}
+  .center-header{display:none}
+  .center-scroll{padding:0 14px 80px}
+}
 </style>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
@@ -346,7 +486,7 @@ body{
         <div class="tnm-sub" id="mob-sub"></div>
       </div>
       <div style="display:flex;align-items:center;gap:7px">
-        <span class="ver-tag">v0.5.2</span>
+        <span class="ver-tag">v0.5.0</span>
         <button id="btn-settings" onclick="nav('settings')" style="display:none;background:none;border:none;font-size:18px;cursor:pointer;padding:2px">⚙️</button>
         <button onclick="doLogout()" style="background:none;border:none;font-size:11px;color:var(--ink3);cursor:pointer;font-family:var(--font)">ออก</button>
       </div>
@@ -359,7 +499,7 @@ body{
         <div class="ch-page" id="ch-page">หน้าหลัก</div>
       </div>
       <div class="ch-actions">
-        <span class="ver-tag">v0.5.2</span>
+        <span class="ver-tag">v0.5.0</span>
         <button class="icon-sm" id="dsk-settings" onclick="nav('settings')" style="display:none"><i class="ti ti-settings"></i></button>
         <button class="icon-sm" onclick="doLogout()" title="ออก"><i class="ti ti-logout"></i></button>
         <button class="btn-share" onclick="nav('inc')"><i class="ti ti-plus" style="font-size:13px"></i> รายรับ</button>
@@ -372,6 +512,7 @@ body{
 
         <!-- HOME -->
         <div id="page-home" class="page active">
+          <!-- stat desktop hidden (อยู่ใน left panel แล้ว) / mobile แสดง -->
           <div class="stat-grid" id="home-stats-mobile">
             <div class="sc" onclick="navToListMonth('income')" style="cursor:pointer"><div class="l">รายรับเดือนนี้</div><div class="v v-inc" id="s-inc">—</div><div class="s" id="s-jobs"></div></div>
             <div class="sc" onclick="navToListMonth('expense')" style="cursor:pointer"><div class="l">รายจ่ายเดือนนี้</div><div class="v v-exp" id="s-exp">—</div></div>
@@ -599,7 +740,6 @@ var GAS_URL='https://script.google.com/macros/s/AKfycbzxbSuKwkkS_vQOt2Hq1ijULGll
 
 // ===== STATE =====
 var currentRole=null;
-var _driveToken=null; // Google Drive access token
 var payMode='cash',catMode='spare',catLabel='ค่าอะไหล่/วัสดุ';
 var receiptFile=null,receiptB64=null;
 var incReceiptFile=null,incReceiptB64=null;
@@ -637,14 +777,28 @@ function setDateFields(){
   var thYear=d.getFullYear()+543;
   var full=months[d.getMonth()]+' '+thYear;
   var short=String(d.getDate()).padStart(2,'0')+'/'+String(d.getMonth()+1).padStart(2,'0')+'/'+thYear;
+  // mobile sub
   var mobSub=document.getElementById('mob-sub');
   if(mobSub) mobSub.textContent=full;
+  // left panel sub
+  
+  
+  // center header
   var chMonth=document.getElementById('ch-month');
   if(chMonth) chMonth.textContent=full;
+  // right panel date
+  
+  // form dates
   var id=document.getElementById('inc-date');
   var ed=document.getElementById('exp-date');
   if(id) id.value=short;
   if(ed) ed.value=short;
+}
+
+  var total=first+daysInMonth;
+  var next=1;
+  while(total%7!==0){html+='<div class="cal-day other">'+(next++)+'</div>';total++;}
+  grid.innerHTML=html;
 }
 
 // ===== PIN =====
@@ -665,19 +819,28 @@ function _submitPin(){
 
 function applyRole(){
   var isOwner=currentRole==='owner';
-  var rbSet=document.getElementById('rb-settings');
+    var rbSet=document.getElementById('rb-settings');
   if(rbSet) rbSet.style.display=isOwner?'flex':'none';
+  // desktop header settings
   var dskSet=document.getElementById('dsk-settings');
   if(dskSet) dskSet.style.display=isOwner?'flex':'none';
+  // mobile
   var btnSet=document.getElementById('btn-settings');
   if(btnSet) btnSet.style.display=isOwner?'inline-block':'none';
   var btnRpt=document.getElementById('bn-report');
   if(btnRpt) btnRpt.style.display=isOwner?'flex':'none';
   var btnAddStock=document.getElementById('btn-add-stock');
   if(btnAddStock) btnAddStock.style.display=isOwner?'inline-block':'none';
+  // rail avatar
+  var av=document.getElementById('rail-avatar');
+  
+  // sub text
+  var roleLabel=(isOwner?'👑 เจ้าของ · ':'👤 พนักงาน · ')+months[new Date().getMonth()]+' '+(new Date().getFullYear()+543);
+  if(el) el.textContent=roleLabel;});
 }
 
 function showApp(){var app=document.getElementById('app-wrap');if(app)app.style.display='';}
+
 
 function doLogout(){
   currentRole=null;_pinBuf='';_updatePinDots();
@@ -699,23 +862,34 @@ function nav(name){
   var chPage=document.getElementById('ch-page');
   if(mobTitle) mobTitle.textContent=title;
   if(chPage) chPage.textContent=title;
+  // sync bottom nav mobile
   var bnMap={home:'home',list:'list',stock:'stock',report:'report',credit:'home',inc:'home',exp:'home',settings:'home','stock-form':'stock','stock-in':'stock','stock-out':'stock'};
   var bnTarget=bnMap[name]||'home';
   document.querySelectorAll('.bn-btn').forEach(function(b){b.classList.remove('active');});
   var bnEl=document.getElementById('bn-'+bnTarget);
   if(bnEl) bnEl.classList.add('active');
   window.scrollTo(0,0);
+  // scroll center panel to top
   var cs=document.querySelector('.center-scroll');
   if(cs) cs.scrollTop=0;
   if(name==='list') renderListPage();
   if(name==='stock'){filterStock();checkStockAlert();}
   if(name==='inc'){incStockLines=[];document.getElementById('stock-items-wrap').innerHTML='';}
 }
+);
+  var rb=document.getElementById('rb-'+name);
+  if(rb) rb.classList.add('active');
+  // mobile bottom nav
+  document.querySelectorAll('.bn-btn').forEach(function(b){b.classList.remove('active');});
+  var bn=document.getElementById('bn-'+name);
+  if(bn) bn.classList.add('active');
+}
 
 // ===== LOAD HOME =====
 function loadHome(){
   gasGet('getCurrentMonthStats').then(function(res){
     if(!res.ok) return;
+    // mobile home
     var si=document.getElementById('s-inc');
     var se=document.getElementById('s-exp');
     var sp=document.getElementById('s-profit');
@@ -726,11 +900,23 @@ function loadHome(){
     if(sp) sp.textContent=fmt(res.profit);
     if(sc) sc.textContent=fmt(res.credit);
     if(sj) sj.textContent=res.jobs+' คิว';
+    // left panel
+    
+      var el=document.getElementById(id);
+      if(el) el.textContent=fmt(vals[i]);
+    });
+    // right panel
+    
+    
+    
+    
+    
   }).catch(function(){});
 
   gasGet('getRecentRows',{n:8}).then(function(res){
     if(!res.ok||!res.rows.length) return;
     window._recentRows=res.rows.slice(0,8);
+    // mobile recent
     var wrap=document.getElementById('recent-list');
     if(wrap){
       wrap.innerHTML=window._recentRows.map(function(r,idx){
@@ -740,10 +926,29 @@ function loadHome(){
       }).join('');
       wrap.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==wrap){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
     }
+    // left panel recent
+    ).join('');
+      lpRecent.onclick=function(e){var el=e.target;while(el&&!el.dataset.ridx&&el!==lpRecent){el=el.parentElement;}if(el&&el.dataset&&el.dataset.ridx!==undefined){showDetail(window._recentRows[parseInt(el.dataset.ridx)]);}};
+    }
   }).catch(function(){});
 
   gasGet('getCreditList').then(function(res){
     renderCredit(res);
+    // right panel credit count + list
+    if(!res.ok){
+      
+      if(rpList) rpList.innerHTML='';
+      return;
+    }
+    var pending=res.rows.filter(function(r){return r.status==='ค้างชำระ';});
+    
+     else {
+        rpList.innerHTML=pending.slice(0,4).map(function(r){
+          var init=(r.customer||'?').substring(0,2);
+          return '<div class="cr-item"><div class="cr-av">'+init+'</div><div class="cr-info"><div class="cr-name">'+r.customer+'</div><div class="cr-plate">บิล '+(r.bill||'—')+' · ครบ '+r.dueDate+'</div></div><div class="cr-amt">฿'+fmt(r.amount)+'</div></div>';
+        }).join('');
+      }
+    }
   }).catch(function(){});
 
   gasGet('getMonthlySummary').then(renderReport).catch(function(){});
@@ -752,11 +957,13 @@ function loadHome(){
     if(res.ok){
       stockCache=res.items||[];
       checkStockAlert();rebuildStockSelect();renderStockList();
+      var low=stockCache.filter(function(s){return s.qty<=(s.minQty||0)&&s.minQty>0;});
+      
     }
   }).catch(function(){});
 }
 
-// ===== CREDIT, REPORT, YEARLY =====
+// ===== CREDIT, REPORT, YEARLY (เหมือนเดิมทุกบรรทัด) =====
 function renderCredit(res){
   var wrap=document.getElementById('credit-list');
   if(!res.ok||!res.rows.length){if(wrap) wrap.innerHTML='<p style="color:var(--green);text-align:center;padding:20px">✅ ไม่มีรายการค้างชำระ</p>';return;}
@@ -845,9 +1052,8 @@ function saveInc(){
       else toast('❌ '+(res.error||'เกิดข้อผิดพลาด'));
     }).catch(function(){btn.disabled=false;btn.textContent='💾 บันทึกรายรับ';toast('❌ ไม่สามารถเชื่อมต่อได้');});
   }
-  if(incReceiptFile){
-    uploadToDrive(incReceiptFile, function(url){ doSaveInc(url); });
-  } else { doSaveInc(''); }
+  if(incReceiptB64&&incReceiptFile){toast('📤 กำลังอัปโหลดหลักฐาน...');gasPost('uploadReceipt',{base64Data:incReceiptB64,filename:incReceiptFile.name,mimeType:incReceiptFile.type}).then(function(res){doSaveInc(res.ok?res.url:'');}).catch(function(){doSaveInc('');});}
+  else{doSaveInc('');}
 }
 function resetIncForm(){['inc-bill','inc-desc','inc-customer','inc-svc','inc-part','inc-note','inc-due'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('inc-total').textContent='0 บาท';setPay('cash');removeIncR();}
 
@@ -857,9 +1063,7 @@ function saveExp(){
   var amt=parseFloat(document.getElementById('exp-amt').value)||0;if(!amt){toast('⚠️ กรุณากรอกจำนวนเงิน');return;}
   var btn=document.getElementById('btn-save-exp');btn.disabled=true;btn.textContent='⏳ กำลังบันทึก...';
   function doSave(url){var data={date:document.getElementById('exp-date').value,category:catLabel,desc:desc,amount:amt,hasReceipt:!!receiptFile,receiptUrl:url||'',payMethod:'เงินสด',note:document.getElementById('exp-note').value};gasPost('appendExpense',data).then(function(res){btn.disabled=false;btn.textContent='💾 บันทึกรายจ่าย';if(res.ok){toast('✅ บันทึกเรียบร้อย (#'+res.no+')');resetExpForm();setTimeout(function(){nav('home');loadHome();},1500);}else toast('❌ '+(res.error||'เกิดข้อผิดพลาด'));}).catch(function(){btn.disabled=false;btn.textContent='💾 บันทึกรายจ่าย';toast('❌ ไม่สามารถเชื่อมต่อได้');});}
-  if(receiptFile){
-    uploadToDrive(receiptFile, function(url){ doSave(url); });
-  } else { doSave(''); }
+  if(receiptB64&&receiptFile){toast('📤 กำลังอัปโหลดใบเสร็จ...');gasPost('uploadReceipt',{base64Data:receiptB64,filename:receiptFile.name,mimeType:receiptFile.type}).then(function(res){doSave(res.ok?res.url:'');}).catch(function(){doSave('');});}else{doSave('');}
 }
 function resetExpForm(){['exp-desc','exp-amt','exp-note'].forEach(function(id){document.getElementById(id).value='';});removeR();setCat('spare','ค่าอะไหล่/วัสดุ');}
 
@@ -885,7 +1089,7 @@ var stockCache=[],stockFiltered=[],incStockLines=[];
 function loadStock(){var wrap=document.getElementById('stock-list');if(wrap)wrap.innerHTML='<div class="spinner" style="margin:20px auto"></div>';gasGet('getStock').then(function(res){if(!res.ok){if(wrap)wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px;font-size:11px">โหลดไม่สำเร็จ</p>';return;}stockCache=res.items||[];filterStock();checkStockAlert();rebuildStockSelect();}).catch(function(){if(wrap)wrap.innerHTML='<p style="color:var(--red);text-align:center;padding:20px;font-size:11px">เชื่อมต่อไม่ได้</p>';});}
 function filterStock(){var q=(document.getElementById('stock-search')||{value:''}).value.toLowerCase().trim();stockFiltered=stockCache.filter(function(s){return!q||(s.code||'').toLowerCase().includes(q)||(s.name||'').toLowerCase().includes(q);});renderStockList();}
 function renderStockList(){var wrap=document.getElementById('stock-list');if(!wrap)return;if(!stockFiltered.length){wrap.innerHTML='<p style="color:var(--ink3);text-align:center;padding:20px;font-size:11px">ยังไม่มีสินค้าในสต็อก</p>';return;}wrap.innerHTML=stockFiltered.map(function(s){var low=s.qty<=(s.minQty||0)&&s.minQty>0;var qtyColor=low?'color:#D94F3D;font-weight:600':'color:var(--green-mid);font-weight:600';return'<div class="sc stock-card" data-rowindex="'+s.rowIndex+'" style="margin-bottom:6px"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:11px;color:var(--ink2);font-weight:500">'+s.code+' '+s.name+'</div><div style="font-size:10px;color:var(--ink3);margin-top:2px">'+(s.cost?'ต้นทุน '+fmt(s.cost)+' ฿/'+s.unit:'—')+'</div>'+(low?'<div style="font-size:9px;color:#D94F3D;margin-top:2px">⚠️ ใกล้หมด</div>':'')+'</div><div style="text-align:right;white-space:nowrap"><span style="font-size:20px;'+qtyColor+'">'+s.qty+'</span><span style="font-size:11px;color:var(--ink3);margin-left:3px">'+(s.unit||'หน่วย')+'</span></div></div><div class="stock-actions" style="display:none;gap:6px;margin-top:8px"><button onclick="showStockIn('+s.rowIndex+');event.stopPropagation()" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--green);background:none;font-size:11px;font-family:var(--font);color:var(--green);cursor:pointer">+ รับเข้า</button><button onclick="showStockOut('+s.rowIndex+');event.stopPropagation()" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--red);background:none;font-size:11px;font-family:var(--font);color:var(--red);cursor:pointer">➖ ตัดออก</button>'+(currentRole==='owner'?'<button onclick="showEditStock('+s.rowIndex+');event.stopPropagation()" style="flex:1;padding:6px;border-radius:6px;border:1px solid var(--border2);background:none;font-size:11px;font-family:var(--font);color:var(--ink3);cursor:pointer">✏️ แก้ไข</button>':'')+'</div></div>';}).join('');wrap.onclick=function(e){var card=e.target;while(card&&!card.classList.contains('stock-card')&&card!==wrap){card=card.parentElement;}if(!card||card===wrap)return;wrap.querySelectorAll('.stock-actions').forEach(function(a){if(a.parentElement!==card)a.style.display='none';});var actions=card.querySelector('.stock-actions');if(actions)actions.style.display=actions.style.display==='none'?'flex':'none';};}
-function checkStockAlert(){var low=stockCache.filter(function(s){return s.qty<=(s.minQty||0)&&s.minQty>0;});var badge=document.getElementById('stock-badge');var alert=document.getElementById('stock-alert');if(badge)badge.style.display=low.length?'block':'none';if(alert){if(low.length){alert.style.display='block';alert.innerHTML='⚠️ สินค้าใกล้หมด/หมดสต็อก: '+low.map(function(s){return'<b>'+s.name+'</b> (เหลือ '+s.qty+' '+s.unit+')'}).join(', ');}else{alert.style.display='none';}}}
+function checkStockAlert(){var low=stockCache.filter(function(s){return s.qty<=(s.minQty||0)&&s.minQty>0;});var badge=document.getElementById('stock-badge');var railBadge=document.getElementById('stock-rail-badge');var alert=document.getElementById('stock-alert');if(badge)badge.style.display=low.length?'block':'none';if(railBadge)railBadge.style.display=low.length?'block':'none';if(alert){if(low.length){alert.style.display='block';alert.innerHTML='⚠️ สินค้าใกล้หมด/หมดสต็อก: '+low.map(function(s){return'<b>'+s.name+'</b> (เหลือ '+s.qty+' '+s.unit+')'}).join(', ');}else{alert.style.display='none';}}}
 function showAddStock(){['sf-code','sf-name','sf-unit','sf-qty','sf-cost','sf-min','sf-row'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});nav('stock-form');}
 function showEditStock(rowIndex){var s=stockCache.find(function(x){return x.rowIndex===rowIndex;});if(!s)return;document.getElementById('sf-code').value=s.code||'';document.getElementById('sf-name').value=s.name||'';document.getElementById('sf-unit').value=s.unit||'';document.getElementById('sf-qty').value=s.qty||0;document.getElementById('sf-cost').value=s.cost||'';document.getElementById('sf-min').value=s.minQty||'';document.getElementById('sf-row').value=rowIndex;nav('stock-form');}
 function saveStockItem(){var code=document.getElementById('sf-code').value.trim().toUpperCase();var name=document.getElementById('sf-name').value.trim();if(!code||!name){toast('⚠️ กรุณากรอกรหัสและชื่อสินค้า');return;}var rowIndex=parseInt(document.getElementById('sf-row').value)||0;var data={code:code,name:name,unit:document.getElementById('sf-unit').value.trim(),qty:parseFloat(document.getElementById('sf-qty').value)||0,cost:parseFloat(document.getElementById('sf-cost').value)||0,minQty:parseFloat(document.getElementById('sf-min').value)||0,rowIndex:rowIndex};gasGet(rowIndex?'updateStockItem':'addStockItem',{payload:encodeURIComponent(JSON.stringify(data))}).then(function(res){if(res.ok){toast('✅ บันทึกสำเร็จ');loadStock();nav('stock');}else toast('❌ '+res.error);});}
@@ -929,57 +1133,6 @@ function openEdit(r){
   else{nav('exp');document.getElementById('mob-title').textContent='แก้ไขรายจ่าย';document.getElementById('ch-page').textContent='แก้ไขรายจ่าย';document.getElementById('exp-date').value=r.date||'';var catMap={'ค่าอะไหล่/วัสดุ':'spare','ค่าแรงพนักงาน':'wage','ค่าเช่า':'rent','สาธารณูปโภค':'util','ค่าใช้จ่ายอื่น ๆ':'other'};setCat(catMap[r.category]||'other',r.category||'ค่าใช้จ่ายอื่น ๆ');document.getElementById('exp-desc').value=r.desc||'';document.getElementById('exp-amt').value=r.amount||'';document.getElementById('exp-note').value=r.note||'';document.getElementById('btn-save-exp').textContent='💾 บันทึกการแก้ไข';}
 }
 function exitEditMode(){editMode=false;editRowIndex=0;editType='';document.getElementById('btn-save-inc').textContent='💾 บันทึกรายรับ';document.getElementById('btn-save-exp').textContent='💾 บันทึกรายจ่าย';}
-
-// ===== GOOGLE DRIVE UPLOAD =====
-var GDRIVE_CLIENT_ID = '243120965414-15dnkr3dmcd7j8ih0bc6bmfpov77oa8f.apps.googleusercontent.com';
-
-function _getDriveToken(callback) {
-  if(_driveToken) { callback(_driveToken); return; }
-  var client = google.accounts.oauth2.initTokenClient({
-    client_id: GDRIVE_CLIENT_ID,
-    scope: 'https://www.googleapis.com/auth/drive.file',
-    callback: function(resp) {
-      if(resp.error) { toast('❌ ไม่สามารถเข้าถึง Google Drive'); return; }
-      _driveToken = resp.access_token;
-      callback(_driveToken);
-    }
-  });
-  client.requestAccessToken({prompt: ''});
-}
-
-function uploadToDrive(file, callback) {
-  toast('📤 กำลังอัปโหลดไปยัง Drive...');
-  _getDriveToken(function(token) {
-    var metadata = {
-      name: file.name,
-      mimeType: file.type,
-      parents: []
-    };
-    var form = new FormData();
-    form.append('metadata', new Blob([JSON.stringify(metadata)], {type:'application/json'}));
-    form.append('file', file);
-
-    fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,webViewLink,webContentLink', {
-      method: 'POST',
-      headers: { 'Authorization': 'Bearer ' + token },
-      body: form
-    }).then(function(r){ return r.json(); }).then(function(data) {
-      if(!data.id) { toast('❌ อัปโหลดไม่สำเร็จ'); callback(''); return; }
-      fetch('https://www.googleapis.com/drive/v3/files/'+data.id+'/permissions', {
-        method: 'POST',
-        headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
-        body: JSON.stringify({role:'reader', type:'anyone'})
-      }).then(function() {
-        var url = 'https://drive.google.com/file/d/'+data.id+'/view';
-        toast('✅ อัปโหลดสำเร็จ');
-        callback(url);
-      });
-    }).catch(function(err) {
-      toast('❌ อัปโหลดไม่สำเร็จ');
-      callback('');
-    });
-  });
-}
 
 // ===== PWA =====
 if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}
