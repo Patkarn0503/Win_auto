@@ -108,11 +108,11 @@ body{
   }
   
   /* ซ่อน bottom nav บน desktop */
-  .bottomnav{display:none !important}
+  /* bottomnav แสดงบนคอมด้วย เพราะไม่มี left-rail แล้ว */
   /* ซ่อน topnav บน desktop */
   .topnav-mobile{display:none !important}
   /* content area ใน center ไม่ต้อง padding-bottom สำหรับ bottomnav */
-  .center-scroll{padding-bottom:24px !important}
+  .center-scroll{padding-bottom:90px !important}
 }
 
 /* Mobile — single column */
@@ -842,7 +842,7 @@ function applyRole(){
   if(btnAddStock) btnAddStock.style.display=isOwner?'inline-block':'none';
 }
 
-function showApp(){var app=document.getElementById('app-wrap');if(app)app.style.display='';}
+function showApp(){var app=document.getElementById('app-wrap');if(app)app.style.display=window.matchMedia('(min-width:900px)').matches?'grid':'block';}
 
 
 function doLogout(){
