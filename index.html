@@ -1017,9 +1017,9 @@ function saveInc(){
   var desc=document.getElementById('inc-desc').value.trim();
   if(!desc){toast('⚠️ กรุณากรอกรายการ');return;}
   var btn=document.getElementById('btn-save-inc');btn.disabled=true;btn.textContent='⏳ กำลังบันทึก...';
-  function doSaveInc(evidenceUrl){
+  function doSaveInc(evidenceUrl,refCode,no){
     var stockLines=getIncStockLines();
-    var data={date:document.getElementById('inc-date').value,bill:document.getElementById('inc-bill').value,desc:desc,customer:document.getElementById('inc-customer').value||'',service:document.getElementById('inc-svc').value||0,parts:document.getElementById('inc-part').value||0,payType:payMode==='cash'?'เงินสด':payMode==='transfer'?'โอน':'เงินเชื่อ',dueDate:document.getElementById('inc-due').value||'',note:document.getElementById('inc-note').value,evidenceUrl:evidenceUrl||''};
+    var data={date:document.getElementById('inc-date').value,bill:document.getElementById('inc-bill').value,desc:desc,customer:document.getElementById('inc-customer').value||'',service:document.getElementById('inc-svc').value||0,parts:document.getElementById('inc-part').value||0,payType:payMode==='cash'?'เงินสด':payMode==='transfer'?'โอน':'เงินเชื่อ',dueDate:document.getElementById('inc-due').value||'',note:document.getElementById('inc-note').value,evidenceUrl:evidenceUrl||'',refCode:refCode||'',no:no||undefined};
     var action=editMode?'updateIncome':'appendIncome';if(editMode)data.rowIndex=editRowIndex;
     gasPost(action,data).then(function(res){
       btn.disabled=false;btn.textContent='💾 บันทึกรายรับ';
@@ -1027,7 +1027,7 @@ function saveInc(){
       else toast('❌ '+(res.error||'เกิดข้อผิดพลาด'));
     }).catch(function(){btn.disabled=false;btn.textContent='💾 บันทึกรายรับ';toast('❌ ไม่สามารถเชื่อมต่อได้');});
   }
-  if(incReceiptB64&&incReceiptFile){toast('📤 กำลังอัปโหลดหลักฐาน...');gasUpload('uploadReceipt',{base64Data:incReceiptB64,filename:incReceiptFile.name,mimeType:incReceiptFile.type}).then(function(res){doSaveInc(res.ok?res.url:'');}).catch(function(){doSaveInc('');});}
+  if(incReceiptB64&&incReceiptFile){toast('📤 กำลังอัปโหลดหลักฐาน...');gasUpload('uploadReceipt',{recordType:'income',base64Data:incReceiptB64,filename:incReceiptFile.name,mimeType:incReceiptFile.type}).then(function(res){doSaveInc(res.ok?res.url:'',res.ok?res.refCode:'',res.ok?res.no:undefined);}).catch(function(){doSaveInc('');});}
   else{doSaveInc('');}
 }
 function resetIncForm(){['inc-bill','inc-desc','inc-customer','inc-svc','inc-part','inc-note','inc-due'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('inc-total').textContent='0 บาท';setPay('cash');removeIncR();}
@@ -1037,8 +1037,8 @@ function saveExp(){
   var desc=document.getElementById('exp-desc').value.trim();if(!desc){toast('⚠️ กรุณากรอกรายละเอียด');return;}
   var amt=parseFloat(document.getElementById('exp-amt').value)||0;if(!amt){toast('⚠️ กรุณากรอกจำนวนเงิน');return;}
   var btn=document.getElementById('btn-save-exp');btn.disabled=true;btn.textContent='⏳ กำลังบันทึก...';
-  function doSave(url){var data={date:document.getElementById('exp-date').value,category:catLabel,desc:desc,amount:amt,hasReceipt:!!receiptFile,receiptUrl:url||'',payMethod:'เงินสด',note:document.getElementById('exp-note').value};gasPost('appendExpense',data).then(function(res){btn.disabled=false;btn.textContent='💾 บันทึกรายจ่าย';if(res.ok){toast('✅ บันทึกเรียบร้อย (#'+res.no+')');resetExpForm();setTimeout(function(){nav('home');loadHome();},1500);}else toast('❌ '+(res.error||'เกิดข้อผิดพลาด'));}).catch(function(){btn.disabled=false;btn.textContent='💾 บันทึกรายจ่าย';toast('❌ ไม่สามารถเชื่อมต่อได้');});}
-  if(receiptB64&&receiptFile){toast('📤 กำลังอัปโหลดใบเสร็จ...');gasUpload('uploadReceipt',{base64Data:receiptB64,filename:receiptFile.name,mimeType:receiptFile.type}).then(function(res){doSave(res.ok?res.url:'');}).catch(function(){doSave('');});}else{doSave('');}
+  function doSave(url,refCode,no){var data={date:document.getElementById('exp-date').value,category:catLabel,desc:desc,amount:amt,hasReceipt:!!receiptFile,receiptUrl:url||'',payMethod:'เงินสด',note:document.getElementById('exp-note').value,refCode:refCode||'',no:no||undefined};gasPost('appendExpense',data).then(function(res){btn.disabled=false;btn.textContent='💾 บันทึกรายจ่าย';if(res.ok){toast('✅ บันทึกเรียบร้อย (#'+res.no+')');resetExpForm();setTimeout(function(){nav('home');loadHome();},1500);}else toast('❌ '+(res.error||'เกิดข้อผิดพลาด'));}).catch(function(){btn.disabled=false;btn.textContent='💾 บันทึกรายจ่าย';toast('❌ ไม่สามารถเชื่อมต่อได้');});}
+  if(receiptB64&&receiptFile){toast('📤 กำลังอัปโหลดใบเสร็จ...');gasUpload('uploadReceipt',{recordType:'expense',base64Data:receiptB64,filename:receiptFile.name,mimeType:receiptFile.type}).then(function(res){doSave(res.ok?res.url:'',res.ok?res.refCode:'',res.ok?res.no:undefined);}).catch(function(){doSave('');});}else{doSave('');}
 }
 function resetExpForm(){['exp-desc','exp-amt','exp-note'].forEach(function(id){document.getElementById(id).value='';});removeR();setCat('spare','ค่าอะไหล่/วัสดุ');}
 
