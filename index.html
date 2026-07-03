@@ -780,6 +780,7 @@ window.addEventListener('load',function(){
   setDateFields();
   document.getElementById('loading').style.display='none';
   document.getElementById('pin-screen').style.display='flex';
+  gasGet('ping').catch(function(){}); // ปลุก Apps Script container ล่วงหน้า ก่อนคนกด PIN เสร็จ
 });
 
 function setDateFields(){
@@ -813,16 +814,21 @@ function _updatePinDots(){for(var i=0;i<4;i++){var d=document.getElementById('pd
 function _submitPin(){
   var errEl=document.getElementById('pin-err');
   errEl.textContent='⏳ กำลังตรวจสอบ...';
-  // timeout 8 วินาที ถ้า GAS ช้า
-  var timedOut=false;
-  var timer=setTimeout(function(){
-    timedOut=true;
-    _pinBuf='';_updatePinDots();
-    errEl.textContent='เชื่อมต่อช้า กรุณาลองใหม่';
+  var settled=false;
+  var softTimer=setTimeout(function(){
+    if(settled)return;
+    errEl.textContent='⏳ เชื่อมต่อช้า กำลังรอผลต่อ...';
   },8000);
+  var hardTimer=setTimeout(function(){
+    if(settled)return;
+    settled=true;
+    _pinBuf='';_updatePinDots();
+    errEl.textContent='เชื่อมต่อช้าเกินไป กรุณาลองใหม่';
+  },20000);
   gasGet('verifyPin',{pin:_pinBuf}).then(function(res){
-    if(timedOut) return;
-    clearTimeout(timer);
+    if(settled)return;
+    settled=true;
+    clearTimeout(softTimer);clearTimeout(hardTimer);
     if(res.ok){
       currentRole=res.role;_pinBuf='';_updatePinDots();
       errEl.textContent='';
@@ -830,8 +836,9 @@ function _submitPin(){
       applyRole();showApp();loadHome();
     } else {_pinBuf='';_updatePinDots();errEl.textContent=res.error||'PIN ไม่ถูกต้อง';}
   }).catch(function(){
-    if(timedOut) return;
-    clearTimeout(timer);
+    if(settled)return;
+    settled=true;
+    clearTimeout(softTimer);clearTimeout(hardTimer);
     _pinBuf='';_updatePinDots();errEl.textContent='เชื่อมต่อไม่ได้ ลองใหม่';
   });
 }
